@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ToDoList</string>
+    <string name="add_item">add</string>
+    <string name="delete_item">delete</string>
+    <string name="removal_warning">"Are you sure you want to delete everything? After removal, it will be impossible to recover!"</string>
+    <string name="done">done</string>
+    <string name="task">task</string>
+    <string name="description">description</string>
+    <string name="save">save</string>
+
+</resources>
