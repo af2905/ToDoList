@@ -31,7 +31,7 @@ When you click on the basket sign in the menu, a dialog appears to delete all ta
 The project uses Gradle. The application is built using commands build.gradle
 
 # Usage
-Game application
+Daily use for to-do list
 
 # TODO list
 *
