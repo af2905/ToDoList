@@ -26,6 +26,8 @@ import java.util.Locale;
 public class ItemsFragment extends Fragment {
     private final RecyclerView.Adapter adapter = new ItemAdapter();
     private RecyclerView recycler;
+   /*private TextView name , desc , created ;
+   private CheckBox done;*/
 
     @Nullable
     @Override
@@ -36,8 +38,32 @@ public class ItemsFragment extends Fragment {
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycler.setAdapter(adapter);
+      /*  name = getActivity().findViewById(R.id.name);
+        desc = getActivity().findViewById(R.id.description);
+        created = getActivity().findViewById(R.id.created);
+        done = getActivity().findViewById(R.id.done);*/
+
+       /* if (savedInstanceState != null) {
+            String textName = savedInstanceState.getString("name");
+            name.setText(textName);
+            String textDesc = savedInstanceState.getString("desc");
+            desc.setText(textDesc);
+            String textCreated = savedInstanceState.getString("created");
+            created.setText(textCreated);
+            Boolean isChecked = savedInstanceState.getBoolean("done");
+            done.setChecked(isChecked);
+        }*/
         return view;
     }
+
+    /*@Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("name", name.getText().toString());
+        outState.putString("desc", desc.getText().toString());
+        outState.putString("created", created.getText().toString());
+        outState.putBoolean("done", done.isChecked());
+        super.onSaveInstanceState(outState);
+    }*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +111,7 @@ public class ItemsFragment extends Fragment {
             desc.setText(item.getDesc());
             final TextView created = holder.itemView.findViewById(R.id.created);
             created.setText(format(item.getCreated()));
+
             name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -100,18 +127,15 @@ public class ItemsFragment extends Fragment {
             done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    TextView tvDone = getActivity().findViewById(R.id.tvDone);
+
                     if (isChecked) {
                         item.setDone(true);
-                        tvDone.setText(R.string.done);
-                        tvDone.setTextColor(getResources().getColor(android.R.color.background_dark));
                         setPaintFlagsAndColor(name);
                         setPaintFlagsAndColor(desc);
                         setPaintFlagsAndColor(created);
 
                     } else {
                         item.setDone(false);
-                        tvDone.setText("");
                         removePaintFlagsAndColor(name);
                         removePaintFlagsAndColor(desc);
                         removePaintFlagsAndColor(created);

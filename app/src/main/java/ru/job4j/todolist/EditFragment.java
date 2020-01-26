@@ -24,9 +24,10 @@ public class EditFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add, container, false);
-        final int position = getActivity().getIntent().getIntExtra("position", 0);
+        final int position = getArguments().getInt("position", 0);
         editName = view.findViewById(R.id.editName);
         editDesc = view.findViewById(R.id.editDesc);
         save = view.findViewById(R.id.save);
@@ -76,5 +77,13 @@ public class EditFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public static EditFragment of (int position){
+        EditFragment fragment = new EditFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 }
