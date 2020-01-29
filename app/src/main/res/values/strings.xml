@@ -6,6 +6,6 @@
     <string name="done">done</string>
     <string name="task">task</string>
     <string name="description">description</string>
+    <string name="no_description">"description not added"</string>
     <string name="save">save</string>
-
 </resources>
