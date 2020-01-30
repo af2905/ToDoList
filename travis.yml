@@ -1,12 +1,12 @@
+
+
+# используем язык java. Travis CI поддерживает другие языки тоже.
+language: android
+jdk: oraclejdk11
+
 env:
   global:
     - CODECOV_TOKEN="d4d65e43-01da-4ddf-88cc-d33175bbcee9"
-
-# используем язык java. Travis CI поддерживает другие языки тоже.
-language: java
-jdk:
-  - openjdk13
-
 # используем режим обычного пользователя для сборки проекта.
 sudo: false
 
