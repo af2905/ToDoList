@@ -1,7 +1,7 @@
 
 
 # используем язык java. Travis CI поддерживает другие языки тоже.
-language: android
+language: java
 jdk: oraclejdk11
 
 env:
