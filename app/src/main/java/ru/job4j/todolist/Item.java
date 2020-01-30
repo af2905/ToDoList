@@ -47,8 +47,7 @@ public class Item {
         this.done = done;
     }
 
-    @SuppressWarnings("checkstyle:LeftCurly")
-    @Override
+        @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
