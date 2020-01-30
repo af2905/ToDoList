@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/af2905/ToDoList.svg?branch=master)](https://travis-ci.org/af2905/ToDoList)
+[![codecov](https://codecov.io/gh/af2905/ToDoList/branch/master/graph/badge.svg)](https://codecov.io/gh/af2905/ToDoList)
+
 # ToDoList
 The ToDo List application has host activity. Each screen is a fragment under the control of activity. A fragment of the first screen consists of a blank RecyclerView.
 
