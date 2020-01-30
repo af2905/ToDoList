@@ -2,6 +2,7 @@
 .gradle
 .idea
 /local.properties
+!gradle/wrapper/*
 /.idea/navEditor.xml
 .DS_Store
 /build
