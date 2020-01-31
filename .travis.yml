@@ -1,20 +1,22 @@
 
-# используем язык java. Travis CI поддерживает другие языки тоже.
-language: java
-jdk: oraclejdk11
+language: android
+dist: trusty
+android:
+  components:
+
+    # The BuildTools version used by your project
+    - build-tools-29.0.2
+
+    # The SDK version used to compile your project
+    - android-29
 
 env:
   global:
     - CODECOV_TOKEN="d4d65e43-01da-4ddf-88cc-d33175bbcee9"
-# используем режим обычного пользователя для сборки проекта.
-sudo: false
 
-# после выполнения сборки запустить скрипт, который будет собирать статистику по JaCoCo
-# Здесь используется сторонни сервис https://codecov.io/
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-# Отправлять уведомление на почтуyouremail@smtp.ru(Изменить на свою) если сборка упала
 notifications:
   email:
     recipients:
