@@ -1,8 +1,10 @@
 package ru.job4j.todolist;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +40,8 @@ public class ItemsFragment extends Fragment {
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycler.setAdapter(adapter);
+        loadStore();
+
       /*  name = getActivity().findViewById(R.id.name);
         desc = getActivity().findViewById(R.id.description);
         created = getActivity().findViewById(R.id.created);
@@ -56,7 +60,7 @@ public class ItemsFragment extends Fragment {
         return view;
     }
 
-    /*@Override
+       /*@Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString("name", name.getText().toString());
         outState.putString("desc", desc.getText().toString());
@@ -64,6 +68,21 @@ public class ItemsFragment extends Fragment {
         outState.putBoolean("done", done.isChecked());
         super.onSaveInstanceState(outState);
     }*/
+
+    private void loadStore() {
+        String selection = "a";
+        Cursor cursor = this.getActivity().getContentResolver()
+                .query(StoreContentProvider.CONTENT_URI, null,
+                        selection, null,
+                        null, null);
+        try {
+            while (cursor.moveToNext()) {
+                Log.d("ContentProvider", cursor.getString(1));
+            }
+        } finally {
+            cursor.close();
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,10 +164,9 @@ public class ItemsFragment extends Fragment {
         }
 
         private String format(Calendar cal) {
-            int month = cal.get(Calendar.MONTH);
-            int correctMonth = month++;
             return String.format(Locale.getDefault(), "%02d.%02d.%d",
-                    cal.get(Calendar.DAY_OF_MONTH), cal.get(correctMonth), cal.get(Calendar.YEAR));
+                    cal.get(Calendar.DAY_OF_MONTH),
+                    cal.get(Calendar.MONTH) + 1, cal.get(Calendar.YEAR));
         }
 
         @Override
