@@ -1,4 +1,4 @@
-package ru.job4j.todolist;
+package ru.job4j.todolist.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,10 @@ import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
 
+import ru.job4j.todolist.R;
+import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.store.MemStore;
+
 public class EditFragment extends Fragment implements View.OnClickListener, TextWatcher {
     private Button save;
     private EditText editName;
@@ -33,11 +37,11 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         editDesc = view.findViewById(R.id.editDesc);
         save = view.findViewById(R.id.save);
         save.setOnClickListener(this);
-        editName.setText(Store.getStore().get(position).getName());
-        if (Store.getStore().get(position).getDesc().equals("description not added")) {
+        editName.setText(MemStore.getStore().getItem(position).getName());
+        if (MemStore.getStore().getItem(position).getDesc().equals("description not added")) {
             editDesc.setText("");
         } else {
-            editDesc.setText(Store.getStore().get(position).getDesc());
+            editDesc.setText(MemStore.getStore().getItem(position).getDesc());
         }
         editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
         editDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(40)});
@@ -59,7 +63,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         if (descText.length() == 0) {
             descText = "description not added";
         }
-        Store.getStore().set(position, new Item(
+        MemStore.getStore().set(position, new Item(
                 editName.getText().toString(),
                 descText,
                 Calendar.getInstance()));

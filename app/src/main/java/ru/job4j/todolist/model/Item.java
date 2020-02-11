@@ -1,4 +1,4 @@
-package ru.job4j.todolist;
+package ru.job4j.todolist.model;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -9,13 +9,13 @@ public class Item {
     private Calendar created;
     private boolean done;
 
-    Item(String name, String desc, Calendar created) {
+    public Item(String name, String desc, Calendar created) {
         this.name = name;
         this.desc = desc;
         this.created = created;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -23,7 +23,7 @@ public class Item {
         this.name = name;
     }
 
-    String getDesc() {
+    public String getDesc() {
         return desc;
     }
 
@@ -31,7 +31,7 @@ public class Item {
         this.desc = desc;
     }
 
-    Calendar getCreated() {
+    public Calendar getCreated() {
         return created;
     }
 
@@ -39,11 +39,11 @@ public class Item {
         this.created = created;
     }
 
-    boolean isDone() {
+    public boolean isDone() {
         return done;
     }
 
-    void setDone(boolean done) {
+    public void setDone(boolean done) {
         this.done = done;
     }
 

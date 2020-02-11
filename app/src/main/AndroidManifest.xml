@@ -11,17 +11,17 @@
         android:theme="@style/AppTheme">
         <provider
             android:authorities="ru.job4j.todolist"
-            android:name=".StoreContentProvider"/>
-        <activity android:name=".AddActivity"/>
-        <activity android:name=".EditActivity"/>
-        <activity android:name=".ItemsActivity">
+            android:name=".store.StoreContentProvider"/>
+        <activity android:name=".fragments.AddActivity"/>
+        <activity android:name=".fragments.EditActivity"/>
+        <activity android:name=".fragments.ItemsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BaseActivity" />
+        <activity android:name=".fragments.BaseActivity" />
     </application>
 
 </manifest>

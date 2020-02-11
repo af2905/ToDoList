@@ -1,4 +1,4 @@
-package ru.job4j.todolist;
+package ru.job4j.todolist.fragments;
 
 import androidx.fragment.app.Fragment;
 

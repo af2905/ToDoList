@@ -1,4 +1,4 @@
-package ru.job4j.todolist;
+package ru.job4j.todolist.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import ru.job4j.todolist.R;
 
 public class DeleteDialogFragment extends DialogFragment {
     private DeleteDialogListener callback;
@@ -22,7 +24,7 @@ public class DeleteDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Dialog dialog = new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.removal_warning)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -35,7 +37,6 @@ public class DeleteDialogFragment extends DialogFragment {
                         callback.onNegativeDialogClick(DeleteDialogFragment.this);
                     }
                 }).create();
-        return dialog;
     }
 
     @Override

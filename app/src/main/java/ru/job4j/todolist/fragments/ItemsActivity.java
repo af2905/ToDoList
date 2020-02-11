@@ -1,9 +1,12 @@
-package ru.job4j.todolist;
+package ru.job4j.todolist.fragments;
 
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import ru.job4j.todolist.R;
+import ru.job4j.todolist.store.MemStore;
 
 public class ItemsActivity extends BaseActivity
         implements DeleteDialogFragment.DeleteDialogListener {
@@ -14,7 +17,7 @@ public class ItemsActivity extends BaseActivity
 
     @Override
     public void onPositiveDialogClick(DialogFragment fragment) {
-        Store.getStore().getAll().clear();
+        MemStore.getStore().getAllItems().clear();
         TextView name = findViewById(R.id.name);
         name.setText("");
         TextView desc = findViewById(R.id.description);

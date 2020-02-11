@@ -1,4 +1,4 @@
-package ru.job4j.todolist;
+package ru.job4j.todolist.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,6 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Calendar;
 import java.util.Locale;
+
+import ru.job4j.todolist.R;
+import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.store.MemStore;
+import ru.job4j.todolist.store.StoreContentProvider;
 
 public class ItemsFragment extends Fragment {
     private final RecyclerView.Adapter adapter = new ItemAdapter();
@@ -123,7 +128,7 @@ public class ItemsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-            final Item item = Store.getStore().get(position);
+            final Item item = MemStore.getStore().getItem(position);
             final TextView name = holder.itemView.findViewById(R.id.name);
             name.setText(String.format("%s. %s", position + 1, item.getName()));
             final TextView desc = holder.itemView.findViewById(R.id.description);
@@ -171,7 +176,7 @@ public class ItemsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return Store.getStore().size();
+            return MemStore.getStore().size();
         }
     }
 

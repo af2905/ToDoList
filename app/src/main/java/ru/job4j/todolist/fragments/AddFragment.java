@@ -1,4 +1,4 @@
-package ru.job4j.todolist;
+package ru.job4j.todolist.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
+
+import ru.job4j.todolist.R;
+import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.store.MemStore;
 
 public class AddFragment extends Fragment implements View.OnClickListener, TextWatcher {
     private Button save;
@@ -43,7 +47,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
         if (descText.length() == 0) {
             descText = "description not added";
         }
-        Store.getStore().add(new Item(
+        MemStore.getStore().addItem(new Item(
                 editName.getText().toString(),
                 descText,
                 Calendar.getInstance()));
