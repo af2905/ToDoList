@@ -16,26 +16,6 @@ public class MemStore implements IStore {
         return INST;
     }
 
-/*    void add(Item item) {
-        this.items.add(item);
-    }*/
-
-    public void set(int index, Item item) {
-        this.items.set(index, item);
-    }
-
-  /*  List<Item> getAll() {
-        return this.items;
-    }*/
-
-    public int size() {
-        return items.size();
-    }
-
-    /*public Item get(int index) {
-        return items.get(index);
-    }*/
-
     @Override
     public void addItem(Item item) {
         this.items.add(item);
@@ -52,12 +32,17 @@ public class MemStore implements IStore {
     }
 
     @Override
-    public int updateItem(Item item) {
-        return 0;
+    public void updateItem(Item item) {
+
     }
 
     @Override
     public void deleteItem(Item item) {
         items.remove(item);
+    }
+
+    @Override
+    public void deleteAll() {
+        items.clear();
     }
 }

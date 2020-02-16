@@ -15,33 +15,33 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.Calendar;
-
+import ru.job4j.todolist.CalendarFormat;
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.model.Item;
-import ru.job4j.todolist.store.MemStore;
+import ru.job4j.todolist.store.SqlStore;
 
 public class EditFragment extends Fragment implements View.OnClickListener, TextWatcher {
     private Button save;
     private EditText editName;
     private EditText editDesc;
-    private int position;
+    private int id;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add, container, false);
-        position = getArguments().getInt("position", 0);
+        id = getArguments().getInt("id");
         editName = view.findViewById(R.id.editName);
         editDesc = view.findViewById(R.id.editDesc);
         save = view.findViewById(R.id.save);
         save.setOnClickListener(this);
-        editName.setText(MemStore.getStore().getItem(position).getName());
-        if (MemStore.getStore().getItem(position).getDesc().equals("description not added")) {
+        editName.setText(SqlStore.getInstance(getContext()).getItem(id).getName());
+        if (SqlStore.getInstance(getContext()).getItem(id).getDesc().equals("description not added")) {
+            editDesc.setText("");
             editDesc.setText("");
         } else {
-            editDesc.setText(MemStore.getStore().getItem(position).getDesc());
+            editDesc.setText(SqlStore.getInstance(getContext()).getItem(id).getDesc());
         }
         editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
         editDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(40)});
@@ -49,10 +49,10 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         return view;
     }
 
-    static EditFragment of(int position) {
+    static EditFragment of(int id) {
         EditFragment fragment = new EditFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("position", position);
+        bundle.putInt("id", id);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -63,10 +63,9 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         if (descText.length() == 0) {
             descText = "description not added";
         }
-        MemStore.getStore().set(position, new Item(
-                editName.getText().toString(),
+        SqlStore.getInstance(getContext()).updateItem(new Item(editName.getText().toString(),
                 descText,
-                Calendar.getInstance()));
+                CalendarFormat.dateFormatMethod()));
         Intent intent = new Intent(getActivity().getApplicationContext(), ItemsActivity.class);
         startActivity(intent);
     }

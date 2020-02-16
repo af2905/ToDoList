@@ -1,18 +1,26 @@
 package ru.job4j.todolist.model;
 
-import java.util.Calendar;
 import java.util.Objects;
 
 public class Item {
+    private int id;
     private String name;
     private String desc;
-    private Calendar created;
+    private String created;
     private boolean done;
 
-    public Item(String name, String desc, Calendar created) {
+    public Item(String name, String desc, String created) {
         this.name = name;
         this.desc = desc;
         this.created = created;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -31,11 +39,11 @@ public class Item {
         this.desc = desc;
     }
 
-    public Calendar getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    void setCreated(Calendar created) {
+    void setCreated(String created) {
         this.created = created;
     }
 
@@ -47,7 +55,7 @@ public class Item {
         this.done = done;
     }
 
-        @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -56,11 +64,15 @@ public class Item {
             return false;
         }
         Item item = (Item) o;
-        return Objects.equals(name, item.name);
+        return id == item.id
+                && done == item.done
+                && name.equals(item.name)
+                && Objects.equals(desc, item.desc)
+                && Objects.equals(created, item.created);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id, name, desc, created, done);
     }
 }

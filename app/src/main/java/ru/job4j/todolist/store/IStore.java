@@ -11,7 +11,9 @@ public interface IStore {
 
     List<Item> getAllItems();
 
-    int updateItem(Item item);
+    void updateItem(Item item);
 
     void deleteItem(Item item);
+
+    void deleteAll();
 }

@@ -15,20 +15,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.Calendar;
-
+import ru.job4j.todolist.CalendarFormat;
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.model.Item;
-import ru.job4j.todolist.store.MemStore;
+import ru.job4j.todolist.store.SqlStore;
 
 public class AddFragment extends Fragment implements View.OnClickListener, TextWatcher {
     private Button save;
     private EditText editName;
     private EditText editDesc;
+    private SqlStore store;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add, container, false);
         editName = view.findViewById(R.id.editName);
         editDesc = view.findViewById(R.id.editDesc);
@@ -38,6 +39,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
         editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
         editDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(40)});
         editName.addTextChangedListener(this);
+        store = SqlStore.getInstance(getContext());
         return view;
     }
 
@@ -47,10 +49,9 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
         if (descText.length() == 0) {
             descText = "description not added";
         }
-        MemStore.getStore().addItem(new Item(
-                editName.getText().toString(),
+        store.addItem(new Item(editName.getText().toString(),
                 descText,
-                Calendar.getInstance()));
+                CalendarFormat.dateFormatMethod()));
         Intent intent = new Intent(getActivity().getApplicationContext(), ItemsActivity.class);
         startActivity(intent);
     }

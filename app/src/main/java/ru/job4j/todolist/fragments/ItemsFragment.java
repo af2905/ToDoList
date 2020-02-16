@@ -1,10 +1,8 @@
 package ru.job4j.todolist.fragments;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,19 +20,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.List;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.model.Item;
-import ru.job4j.todolist.store.MemStore;
-import ru.job4j.todolist.store.StoreContentProvider;
+import ru.job4j.todolist.store.SqlStore;
 
 public class ItemsFragment extends Fragment {
-    private final RecyclerView.Adapter adapter = new ItemAdapter();
+    private RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     private RecyclerView recycler;
-   /*private TextView name , desc , created ;
-   private CheckBox done;*/
 
     @Nullable
     @Override
@@ -44,37 +38,13 @@ public class ItemsFragment extends Fragment {
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        List<Item> items = SqlStore.getInstance(getContext()).getAllItems();
+        adapter = new ItemAdapter(items);
         recycler.setAdapter(adapter);
-        loadStore();
-
-      /*  name = getActivity().findViewById(R.id.name);
-        desc = getActivity().findViewById(R.id.description);
-        created = getActivity().findViewById(R.id.created);
-        done = getActivity().findViewById(R.id.done);*/
-
-       /* if (savedInstanceState != null) {
-            String textName = savedInstanceState.getString("name");
-            name.setText(textName);
-            String textDesc = savedInstanceState.getString("desc");
-            desc.setText(textDesc);
-            String textCreated = savedInstanceState.getString("created");
-            created.setText(textCreated);
-            Boolean isChecked = savedInstanceState.getBoolean("done");
-            done.setChecked(isChecked);
-        }*/
+        //loadStore();
         return view;
     }
-
-       /*@Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("name", name.getText().toString());
-        outState.putString("desc", desc.getText().toString());
-        outState.putString("created", created.getText().toString());
-        outState.putBoolean("done", done.isChecked());
-        super.onSaveInstanceState(outState);
-    }*/
-
-    private void loadStore() {
+  /*  private void loadStore() {
         String selection = "a";
         Cursor cursor = this.getActivity().getContentResolver()
                 .query(StoreContentProvider.CONTENT_URI, null,
@@ -87,7 +57,7 @@ public class ItemsFragment extends Fragment {
         } finally {
             cursor.close();
         }
-    }
+    }*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,6 +88,12 @@ public class ItemsFragment extends Fragment {
     }
 
     private final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private final List<Item> items;
+
+        private ItemAdapter(List<Item> items) {
+            this.items = items;
+        }
+
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -128,20 +104,20 @@ public class ItemsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-            final Item item = MemStore.getStore().getItem(position);
+            final Item item = items.get(position);
             final TextView name = holder.itemView.findViewById(R.id.name);
-            name.setText(String.format("%s. %s", position + 1, item.getName()));
+            name.setText(String.format(
+                    "%s. %s", position + 1, item.getName() + "Item id = " + item.getId()));
             final TextView desc = holder.itemView.findViewById(R.id.description);
             desc.setText(item.getDesc());
             final TextView created = holder.itemView.findViewById(R.id.created);
-            created.setText(format(item.getCreated()));
-
+            created.setText(item.getCreated());
             name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!item.isDone()) {
                         Intent intent = new Intent(getActivity(), EditActivity.class);
-                        intent.putExtra("position", position);
+                        intent.putExtra("id", item.getId());
                         startActivity(intent);
                     }
                 }
@@ -168,15 +144,9 @@ public class ItemsFragment extends Fragment {
             });
         }
 
-        private String format(Calendar cal) {
-            return String.format(Locale.getDefault(), "%02d.%02d.%d",
-                    cal.get(Calendar.DAY_OF_MONTH),
-                    cal.get(Calendar.MONTH) + 1, cal.get(Calendar.YEAR));
-        }
-
         @Override
         public int getItemCount() {
-            return MemStore.getStore().size();
+            return SqlStore.getInstance(getContext()).getAllItems().size();
         }
     }
 
