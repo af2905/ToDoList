@@ -32,8 +32,8 @@ public class MemStore implements IStore {
     }
 
     @Override
-    public void updateItem(Item item) {
-
+    public int updateItem(Item item) {
+        return 0;
     }
 
     @Override

@@ -9,6 +9,13 @@ public class Item {
     private String created;
     private boolean done;
 
+    public Item(int id, String name, String desc, String created) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
+        this.created = created;
+    }
+
     public Item(String name, String desc, String created) {
         this.name = name;
         this.desc = desc;
@@ -27,7 +34,7 @@ public class Item {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -35,15 +42,15 @@ public class Item {
         return desc;
     }
 
-    void setDesc(String desc) {
-        this.desc = desc;
-    }
-
     public String getCreated() {
         return created;
     }
 
-    void setCreated(String created) {
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public void setCreated(String created) {
         this.created = created;
     }
 

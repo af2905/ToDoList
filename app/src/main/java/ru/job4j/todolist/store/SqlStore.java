@@ -41,6 +41,7 @@ public class SqlStore implements IStore {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(ToDoDbSchema.ToDoTable.TABLE_NAME,
                 new String[]{
+                        ToDoDbSchema.ToDoTable.Cols.ID,
                         ToDoDbSchema.ToDoTable.Cols.NAME,
                         ToDoDbSchema.ToDoTable.Cols.DESC,
                         ToDoDbSchema.ToDoTable.Cols.CREATED},
@@ -64,6 +65,7 @@ public class SqlStore implements IStore {
         if (cursor.moveToFirst()) {
             do {
                 Item item = new Item(
+                        cursor.getInt(0),
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3));
@@ -74,10 +76,10 @@ public class SqlStore implements IStore {
     }
 
     @Override
-    public void updateItem(Item item) {
+    public int updateItem(Item item) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues contentValues = getContentValues(item);
-        db.update(ToDoDbSchema.ToDoTable.TABLE_NAME, contentValues,
+        return db.update(ToDoDbSchema.ToDoTable.TABLE_NAME, contentValues,
                 ToDoDbSchema.ToDoTable.Cols.ID + " = ?",
                 new String[]{String.valueOf(item.getId())});
     }
@@ -86,7 +88,7 @@ public class SqlStore implements IStore {
     public void deleteItem(Item item) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(ToDoDbSchema.ToDoTable.TABLE_NAME,
-                ToDoDbSchema.ToDoTable.Cols.ID + "=?",
+                ToDoDbSchema.ToDoTable.Cols.ID + " = ?",
                 new String[]{String.valueOf(item.getId())});
         db.close();
     }

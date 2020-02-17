@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import ru.job4j.todolist.CalendarFormat;
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.model.Item;
 import ru.job4j.todolist.store.SqlStore;
@@ -25,6 +24,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
     private EditText editName;
     private EditText editDesc;
     private int id;
+    private SqlStore sqlStore = SqlStore.getInstance(getContext());
 
     @Nullable
     @Override
@@ -36,8 +36,8 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         editDesc = view.findViewById(R.id.editDesc);
         save = view.findViewById(R.id.save);
         save.setOnClickListener(this);
-        editName.setText(SqlStore.getInstance(getContext()).getItem(id).getName());
-        if (SqlStore.getInstance(getContext()).getItem(id).getDesc().equals("description not added")) {
+        editName.setText(sqlStore.getItem(id).getName());
+        if (sqlStore.getItem(id).getDesc().equals("description not added")) {
             editDesc.setText("");
             editDesc.setText("");
         } else {
@@ -59,14 +59,15 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
 
     @Override
     public void onClick(View v) {
+        Item item = sqlStore.getItem(id);
         String descText = editDesc.getText().toString();
         if (descText.length() == 0) {
             descText = "description not added";
         }
-        SqlStore.getInstance(getContext()).updateItem(new Item(editName.getText().toString(),
-                descText,
-                CalendarFormat.dateFormatMethod()));
-        Intent intent = new Intent(getActivity().getApplicationContext(), ItemsActivity.class);
+        item.setDesc(descText);
+        item.setName(editName.getText().toString());
+        sqlStore.updateItem(item);
+                Intent intent = new Intent(getActivity().getApplicationContext(), ItemsActivity.class);
         startActivity(intent);
     }
 
