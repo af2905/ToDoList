@@ -51,6 +51,7 @@ public class SqlStore implements IStore {
             cursor.moveToFirst();
         }
         return new Item(
+                cursor.getInt(0),
                 cursor.getString(1),
                 cursor.getString(2),
                 cursor.getString(3));
