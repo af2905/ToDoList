@@ -43,8 +43,8 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         } else {
             editDesc.setText(SqlStore.getInstance(getContext()).getItem(id).getDesc());
         }
-        editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
-        editDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(40)});
+        editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(14)});
+        editDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(24)});
         editName.addTextChangedListener(this);
         return view;
     }

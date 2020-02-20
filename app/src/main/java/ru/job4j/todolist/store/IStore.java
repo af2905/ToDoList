@@ -9,6 +9,8 @@ public interface IStore {
 
     Item getItem(int id);
 
+    List<Item> getSelectedItems(String text);
+
     List<Item> getAllItems();
 
     int updateItem(Item item);

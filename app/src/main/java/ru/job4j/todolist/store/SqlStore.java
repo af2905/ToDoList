@@ -58,6 +58,31 @@ public class SqlStore implements IStore {
     }
 
     @Override
+    public List<Item> getSelectedItems(String text) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        List<Item> items = new ArrayList<>();
+        String selectItems = "SELECT * FROM " + ToDoDbSchema.ToDoTable.TABLE_NAME
+                + " WHERE " + ToDoDbSchema.ToDoTable.Cols.NAME
+                + " LIKE '%" + text + "%'"
+                + " OR " + ToDoDbSchema.ToDoTable.Cols.CREATED
+                + " LIKE '%" + text + "%'";
+        Cursor cursor = db.rawQuery(selectItems, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Item item = new Item(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3));
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return items;
+
+    }
+
+    @Override
     public List<Item> getAllItems() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         List<Item> items = new ArrayList<>();
@@ -73,6 +98,7 @@ public class SqlStore implements IStore {
                 items.add(item);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return items;
     }
 

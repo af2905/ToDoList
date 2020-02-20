@@ -27,6 +27,11 @@ public class MemStore implements IStore {
     }
 
     @Override
+    public List<Item> getSelectedItems(String text) {
+        return null;
+    }
+
+    @Override
     public List<Item> getAllItems() {
         return this.items;
     }

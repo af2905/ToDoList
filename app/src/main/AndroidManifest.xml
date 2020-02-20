@@ -14,6 +14,7 @@
             android:name=".store.StoreContentProvider"/>
         <activity android:name=".fragments.AddActivity"/>
         <activity android:name=".fragments.EditActivity"/>
+        <activity android:name=".fragments.SearchActivity"/>
         <activity android:name=".fragments.ItemsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

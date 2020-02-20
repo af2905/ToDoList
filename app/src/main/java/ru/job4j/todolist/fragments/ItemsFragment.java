@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,12 +39,17 @@ public class ItemsFragment extends Fragment {
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        List<Item> items = SqlStore.getInstance(getContext()).getAllItems();
-        adapter = new ItemAdapter(items);
-        recycler.setAdapter(adapter);
+        updateUI();
         //loadStore();
         return view;
     }
+
+    private void updateUI() {
+        List<Item> items = SqlStore.getInstance(getContext()).getAllItems();
+        adapter = new ItemAdapter(items);
+        recycler.setAdapter(adapter);
+    }
+
   /*  private void loadStore() {
         String selection = "a";
         Cursor cursor = this.getActivity().getContentResolver()
@@ -73,9 +79,14 @@ public class ItemsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.add_item:
-                Intent intent = new Intent(getActivity(), AddActivity.class);
+                intent = new Intent(getActivity(), AddActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.find_item:
+                intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.delete_item:
@@ -106,13 +117,13 @@ public class ItemsFragment extends Fragment {
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
             final Item item = items.get(position);
             final TextView name = holder.itemView.findViewById(R.id.name);
-            name.setText(String.format(
-                    "%s. %s", position + 1, item.getName() + "Item id = " + item.getId()));
+            name.setText(item.getName());
             final TextView desc = holder.itemView.findViewById(R.id.description);
             desc.setText(item.getDesc());
             final TextView created = holder.itemView.findViewById(R.id.created);
             created.setText(item.getCreated());
-            name.setOnClickListener(new View.OnClickListener() {
+            final ImageButton editOneItem = holder.itemView.findViewById(R.id.editOneItemBtn);
+            editOneItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!item.isDone()) {
@@ -120,6 +131,15 @@ public class ItemsFragment extends Fragment {
                         intent.putExtra("id", item.getId());
                         startActivity(intent);
                     }
+                }
+            });
+
+            final ImageButton deleteOneItem = holder.itemView.findViewById(R.id.deleteOneItemBtn);
+            deleteOneItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SqlStore.getInstance(getContext()).deleteItem(item);
+                    updateUI();
                 }
             });
 

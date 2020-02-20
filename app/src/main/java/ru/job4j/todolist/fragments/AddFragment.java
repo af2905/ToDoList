@@ -36,8 +36,8 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
         save = view.findViewById(R.id.save);
         save.setEnabled(false);
         save.setOnClickListener(this);
-        editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
-        editDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(40)});
+        editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(14)});
+        editDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(24)});
         editName.addTextChangedListener(this);
         store = SqlStore.getInstance(getContext());
         return view;
