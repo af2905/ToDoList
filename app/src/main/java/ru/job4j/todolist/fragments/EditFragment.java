@@ -39,7 +39,6 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         editName.setText(sqlStore.getItem(id).getName());
         if (sqlStore.getItem(id).getDesc().equals("description not added")) {
             editDesc.setText("");
-            editDesc.setText("");
         } else {
             editDesc.setText(SqlStore.getInstance(getContext()).getItem(id).getDesc());
         }
@@ -67,7 +66,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         item.setDesc(descText);
         item.setName(editName.getText().toString());
         sqlStore.updateItem(item);
-                Intent intent = new Intent(getActivity().getApplicationContext(), ItemsActivity.class);
+        Intent intent = new Intent(getActivity().getApplicationContext(), ItemsActivity.class);
         startActivity(intent);
     }
 

@@ -37,6 +37,11 @@ public class MemStore implements IStore {
     }
 
     @Override
+    public int size() {
+        return items.size();
+    }
+
+    @Override
     public int updateItem(Item item) {
         return 0;
     }

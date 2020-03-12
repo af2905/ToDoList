@@ -11,4 +11,6 @@
     <string name="find_item">find</string>
     <string name="search_button">search</string>
     <string name="enter_text_to_search">enter text to search</string>
+    <string name="edit_one_item">edit one item</string>
+    <string name="delete_one_item">delete one item</string>
 </resources>

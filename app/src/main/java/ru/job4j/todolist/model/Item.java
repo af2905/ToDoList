@@ -7,19 +7,21 @@ public class Item {
     private String name;
     private String desc;
     private String created;
-    private boolean done;
+    private int done;
 
-    public Item(int id, String name, String desc, String created) {
+    public Item(int id, String name, String desc, String created, int done) {
         this.id = id;
         this.name = name;
         this.desc = desc;
         this.created = created;
+        this.done = done;
     }
 
-    public Item(String name, String desc, String created) {
+    public Item(String name, String desc, String created, int done) {
         this.name = name;
         this.desc = desc;
         this.created = created;
+        this.done = done;
     }
 
     public int getId() {
@@ -54,11 +56,11 @@ public class Item {
         this.created = created;
     }
 
-    public boolean isDone() {
+    public int getDone() {
         return done;
     }
 
-    public void setDone(boolean done) {
+    public void setDone(int done) {
         this.done = done;
     }
 

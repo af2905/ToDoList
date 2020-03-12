@@ -20,7 +20,9 @@ public class ToDoBaseHelper extends SQLiteOpenHelper {
                 + ToDoDbSchema.ToDoTable.Cols.ID + " integer primary key autoincrement, "
                 + ToDoDbSchema.ToDoTable.Cols.NAME + " TEXT, "
                 + ToDoDbSchema.ToDoTable.Cols.DESC + " TEXT, "
-                + ToDoDbSchema.ToDoTable.Cols.CREATED + " TEXT" + ")"
+                + ToDoDbSchema.ToDoTable.Cols.CREATED + " TEXT,"
+                + ToDoDbSchema.ToDoTable.Cols.DONE + " INTEGER"
+                + ")"
         );
     }
 

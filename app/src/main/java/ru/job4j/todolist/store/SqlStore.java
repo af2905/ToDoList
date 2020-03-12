@@ -44,7 +44,8 @@ public class SqlStore implements IStore {
                         ToDoDbSchema.ToDoTable.Cols.ID,
                         ToDoDbSchema.ToDoTable.Cols.NAME,
                         ToDoDbSchema.ToDoTable.Cols.DESC,
-                        ToDoDbSchema.ToDoTable.Cols.CREATED},
+                        ToDoDbSchema.ToDoTable.Cols.CREATED,
+                        ToDoDbSchema.ToDoTable.Cols.DONE},
                 ToDoDbSchema.ToDoTable.Cols.ID + " = ?", new String[]{String.valueOf(id)},
                 null, null, null, null);
         if (cursor != null) {
@@ -54,7 +55,9 @@ public class SqlStore implements IStore {
                 cursor.getInt(0),
                 cursor.getString(1),
                 cursor.getString(2),
-                cursor.getString(3));
+                cursor.getString(3),
+                cursor.getInt(4));
+
     }
 
     @Override
@@ -73,13 +76,13 @@ public class SqlStore implements IStore {
                         cursor.getInt(0),
                         cursor.getString(1),
                         cursor.getString(2),
-                        cursor.getString(3));
+                        cursor.getString(3),
+                        cursor.getInt(4));
                 items.add(item);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return items;
-
     }
 
     @Override
@@ -94,7 +97,8 @@ public class SqlStore implements IStore {
                         cursor.getInt(0),
                         cursor.getString(1),
                         cursor.getString(2),
-                        cursor.getString(3));
+                        cursor.getString(3),
+                        cursor.getInt(4));
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -127,11 +131,17 @@ public class SqlStore implements IStore {
         db.close();
     }
 
+    @Override
+    public int size() {
+        return 0;
+    }
+
     private static ContentValues getContentValues(Item item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ToDoDbSchema.ToDoTable.Cols.NAME, item.getName());
         contentValues.put(ToDoDbSchema.ToDoTable.Cols.DESC, item.getDesc());
         contentValues.put(ToDoDbSchema.ToDoTable.Cols.CREATED, item.getCreated());
+        contentValues.put(ToDoDbSchema.ToDoTable.Cols.DONE, item.getDone());
         return contentValues;
     }
 }

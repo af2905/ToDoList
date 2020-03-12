@@ -13,6 +13,8 @@ public interface IStore {
 
     List<Item> getAllItems();
 
+    int size();
+
     int updateItem(Item item);
 
     void deleteItem(Item item);

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
     private Button save;
     private EditText editName;
     private EditText editDesc;
+    private CheckBox done;
     private SqlStore store;
 
     @Nullable
@@ -43,7 +45,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
         return view;
     }
 
-        @Override
+    @Override
     public void onClick(View v) {
         String descText = editDesc.getText().toString();
         if (descText.length() == 0) {
@@ -51,7 +53,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
         }
         store.addItem(new Item(editName.getText().toString(),
                 descText,
-                CalendarFormat.dateFormatMethod()));
+                CalendarFormat.dateFormatMethod(), 0));
         Intent intent = new Intent(getActivity().getApplicationContext(), ItemsActivity.class);
         startActivity(intent);
     }

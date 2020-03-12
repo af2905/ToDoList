@@ -1,7 +1,6 @@
 package ru.job4j.todolist.fragments;
 
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -115,6 +114,7 @@ public class ItemsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+            final SqlStore store = SqlStore.getInstance(getContext());
             final Item item = items.get(position);
             final TextView name = holder.itemView.findViewById(R.id.name);
             name.setText(item.getName());
@@ -126,7 +126,7 @@ public class ItemsFragment extends Fragment {
             editOneItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!item.isDone()) {
+                    if (item.getDone() == 0) {
                         Intent intent = new Intent(getActivity(), EditActivity.class);
                         intent.putExtra("id", item.getId());
                         startActivity(intent);
@@ -138,27 +138,24 @@ public class ItemsFragment extends Fragment {
             deleteOneItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SqlStore.getInstance(getContext()).deleteItem(item);
+                    store.deleteItem(item);
                     updateUI();
                 }
             });
 
             final CheckBox done = holder.itemView.findViewById(R.id.done);
+            if (item.getDone() == 1) {
+                done.setChecked(true);
+            }
             done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                     if (isChecked) {
-                        item.setDone(true);
-                        setPaintFlagsAndColor(name);
-                        setPaintFlagsAndColor(desc);
-                        setPaintFlagsAndColor(created);
-
+                        item.setDone(1);
+                        store.updateItem(item);
                     } else {
-                        item.setDone(false);
-                        removePaintFlagsAndColor(name);
-                        removePaintFlagsAndColor(desc);
-                        removePaintFlagsAndColor(created);
+                        item.setDone(0);
+                        store.updateItem(item);
                     }
                 }
             });
@@ -168,16 +165,6 @@ public class ItemsFragment extends Fragment {
         public int getItemCount() {
             return SqlStore.getInstance(getContext()).getAllItems().size();
         }
-    }
-
-    private void setPaintFlagsAndColor(TextView text) {
-        text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        text.setTextColor(getResources().getColor(android.R.color.darker_gray));
-    }
-
-    private void removePaintFlagsAndColor(TextView text) {
-        text.setPaintFlags(text.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        text.setTextColor(getResources().getColor(android.R.color.background_dark));
     }
 }
 

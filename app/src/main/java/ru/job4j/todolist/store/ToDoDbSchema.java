@@ -9,6 +9,7 @@ final class ToDoDbSchema {
             static final String NAME = "itemName";
             static final String DESC = "itemDesc";
             static final String CREATED = "itemCreated";
+            static final String DONE = "itemDone";
         }
     }
 }
