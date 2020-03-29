@@ -9,6 +9,7 @@
         android:id="@+id/editName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints="@string/task"
         android:ems="10"
         android:hint="@string/task"
         android:inputType="textPersonName" />
@@ -17,6 +18,7 @@
         android:id="@+id/editDesc"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:autofillHints="@string/description"
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/description"
@@ -26,9 +28,9 @@
         android:id="@+id/photo"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:contentDescription="@string/photo"
         android:cropToPadding="true"
         android:scaleType="centerInside"
-        android:contentDescription="@string/photo"
         android:src="@android:drawable/ic_menu_report_image" />
 
     <Button

@@ -8,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -44,6 +46,9 @@ public class ItemsFragment extends Fragment {
     }
 
     private void updateUI() {
+        int id = R.anim.layout_animation_slide_right;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), id);
+        recycler.setLayoutAnimation(animation);
         List<Item> items = SqlStore.getInstance(getContext()).getAllItems();
         adapter = new ItemAdapter(items);
         recycler.setAdapter(adapter);
@@ -73,7 +78,6 @@ public class ItemsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.items, menu);
-
     }
 
     @Override
