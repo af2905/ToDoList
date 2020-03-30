@@ -17,20 +17,26 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.List;
 
+import ru.job4j.todolist.DividerItemDecoration;
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.model.Item;
 import ru.job4j.todolist.store.SqlStore;
 
-public class ItemsFragment extends Fragment {
+public class ItemsFragment extends Fragment implements View.OnClickListener {
     private RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     private RecyclerView recycler;
+    private final static String TAG = "log";
 
     @Nullable
     @Override
@@ -40,8 +46,30 @@ public class ItemsFragment extends Fragment {
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+        final FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(this);
+        RecyclerView.ItemDecoration decoration = new DividerItemDecoration(6);
+        recycler.addItemDecoration(decoration);
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy < 0) {
+                    fab.show();
+                } else if (dy > 0) {
+                    fab.hide();
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
         updateUI();
-        //loadStore();
         return view;
     }
 
@@ -53,21 +81,6 @@ public class ItemsFragment extends Fragment {
         adapter = new ItemAdapter(items);
         recycler.setAdapter(adapter);
     }
-
-  /*  private void loadStore() {
-        String selection = "a";
-        Cursor cursor = this.getActivity().getContentResolver()
-                .query(StoreContentProvider.CONTENT_URI, null,
-                        selection, null,
-                        null, null);
-        try {
-            while (cursor.moveToNext()) {
-                Log.d("ContentProvider", cursor.getString(1));
-            }
-        } finally {
-            cursor.close();
-        }
-    }*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,6 +112,12 @@ public class ItemsFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(getActivity(), AddActivity.class);
+        startActivity(intent);
     }
 
     private final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -143,7 +162,8 @@ public class ItemsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     store.deleteItem(item);
-                    updateUI();
+                    // updateUI();
+                    runLayoutAnimation(recycler);
                 }
             });
 
@@ -167,8 +187,32 @@ public class ItemsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return SqlStore.getInstance(getContext()).getAllItems().size();
+            return items.size();
         }
     }
-}
 
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        int id = R.anim.layout_animation_fall_down;
+        final LayoutAnimationController animation =
+                AnimationUtils.loadLayoutAnimation(getContext(), id);
+        recyclerView.setLayoutAnimation(animation);
+        List<Item> items = SqlStore.getInstance(getContext()).getAllItems();
+        adapter = new ItemAdapter(items);
+        recycler.setAdapter(adapter);
+    }
+
+       /* private void loadStore() {
+        String selection = "a";
+        Cursor cursor = this.getActivity().getContentResolver()
+                .query(StoreContentProvider.CONTENT_URI, null,
+                        selection, null,
+                        null, null);
+        try {
+            while (cursor.moveToNext()) {
+                Log.d("ContentProvider", cursor.getString(1));
+            }
+        } finally {
+            cursor.close();
+        }
+    }*/
+}
