@@ -30,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 import ru.job4j.todolist.DividerItemDecoration;
+import ru.job4j.todolist.MyApplication;
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.model.Item;
 import ru.job4j.todolist.store.SqlStore;
@@ -99,14 +100,12 @@ public class ItemsFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete_item:
-                DialogFragment dialog = new DeleteDialogFragment();
-                dialog.show(getActivity().getSupportFragmentManager(), "deleteDialog");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.delete_item) {
+            DialogFragment dialog = new DeleteDialogFragment();
+            dialog.show(getActivity().getSupportFragmentManager(), "deleteDialog");
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -210,7 +209,19 @@ public class ItemsFragment extends Fragment
         recycler.setAdapter(adapter);
     }
 
-       /* private void loadStore() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
+    }
+
+    /* private void loadStore() {
         String selection = "a";
         Cursor cursor = this.getActivity().getContentResolver()
                 .query(StoreContentProvider.CONTENT_URI, null,

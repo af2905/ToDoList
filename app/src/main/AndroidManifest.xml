@@ -30,6 +30,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".fragments.BaseActivity" />
+
+        <receiver
+            android:name=".alarm.AlarmReceiver"
+            android:process=":remote" />
+
     </application>
 
 </manifest>
