@@ -7,4 +7,5 @@ public class AddActivity extends BaseActivity {
     public Fragment loadFrg() {
         return new AddFragment();
     }
+
 }

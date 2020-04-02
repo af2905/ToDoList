@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ToDoList</string>
     <string name="add_item">add</string>
-    <string name="delete_item">delete</string>
+    <string name="delete_item">delete all</string>
     <string name="removal_warning">"Are you sure you want to delete everything?"</string>
     <string name="done">done</string>
     <string name="task">task</string>
@@ -14,4 +14,6 @@
     <string name="edit_one_item">edit one item</string>
     <string name="delete_one_item">delete one item</string>
     <string name="photo">photo</string>
+    <string name="date">date</string>
+    <string name="time">time</string>
 </resources>

@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto">
-<item
-    android:id="@+id/add_item"
-    android:icon="@drawable/ic_add_item"
-    android:title="@string/add_item"
-    app:showAsAction="ifRoom|withText" />
 
    <item
        android:id="@+id/find_item"
-       android:icon="@drawable/ic_find_in_page"
+       android:icon="@drawable/ic_find_in_page_white_24dp"
        android:title="@string/find_item"
        app:showAsAction="ifRoom|withText" />
 
    <item
         android:id="@+id/delete_item"
-        android:icon="@drawable/ic_delete_forever_items"
+        android:icon="@drawable/ic_delete_forever_white_24dp"
         android:title="@string/delete_item"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="never" />
 </menu>

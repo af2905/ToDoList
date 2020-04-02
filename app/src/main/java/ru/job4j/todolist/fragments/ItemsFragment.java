@@ -49,10 +49,11 @@ public class ItemsFragment extends Fragment implements View.OnClickListener {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white, getActivity().getTheme()));
         final FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
-        RecyclerView.ItemDecoration decoration = new DividerItemDecoration(6);
+        RecyclerView.ItemDecoration decoration
+                = new DividerItemDecoration(8, 16);
         recycler.addItemDecoration(decoration);
         recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -97,10 +98,6 @@ public class ItemsFragment extends Fragment implements View.OnClickListener {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.add_item:
-                intent = new Intent(getActivity(), AddActivity.class);
-                startActivity(intent);
-                return true;
             case R.id.find_item:
                 intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);

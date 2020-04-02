@@ -7,19 +7,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
-    private int padding;
+    private int paddingTopBottom;
+    private int paddingLeftRight;
 
-    public DividerItemDecoration(int padding) {
-        this.padding = padding;
+    public DividerItemDecoration(int paddingTopBottom, int paddingLeftRight) {
+        this.paddingTopBottom = paddingTopBottom;
+        this.paddingLeftRight = paddingLeftRight;
     }
 
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
                                @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        outRect.top += padding;
-        outRect.bottom += padding;
-        /*outRect.left += padding;
-        outRect.right += padding;*/
+        outRect.top += paddingTopBottom;
+        outRect.bottom += paddingTopBottom;
+        outRect.left += paddingLeftRight;
+        outRect.right += paddingLeftRight;
     }
 }
