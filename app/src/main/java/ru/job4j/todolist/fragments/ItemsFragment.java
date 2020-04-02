@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -33,10 +34,10 @@ import ru.job4j.todolist.R;
 import ru.job4j.todolist.model.Item;
 import ru.job4j.todolist.store.SqlStore;
 
-public class ItemsFragment extends Fragment implements View.OnClickListener {
+public class ItemsFragment extends Fragment
+        implements View.OnClickListener, SearchView.OnQueryTextListener {
     private RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     private RecyclerView recycler;
-    private final static String TAG = "log";
 
     @Nullable
     @Override
@@ -49,7 +50,7 @@ public class ItemsFragment extends Fragment implements View.OnClickListener {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white, getActivity().getTheme()));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimaryDark, getActivity().getTheme()));
         final FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
         RecyclerView.ItemDecoration decoration
@@ -70,6 +71,8 @@ public class ItemsFragment extends Fragment implements View.OnClickListener {
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
+        SearchView searchView = view.findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(this);
         updateUI();
         return view;
     }
@@ -96,12 +99,7 @@ public class ItemsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
-            case R.id.find_item:
-                intent = new Intent(getActivity(), SearchActivity.class);
-                startActivity(intent);
-                return true;
             case R.id.delete_item:
                 DialogFragment dialog = new DeleteDialogFragment();
                 dialog.show(getActivity().getSupportFragmentManager(), "deleteDialog");
@@ -115,6 +113,20 @@ public class ItemsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         Intent intent = new Intent(getActivity(), AddActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        List<Item> items = SqlStore.getInstance(getContext())
+                .getSelectedItems(newText);
+        adapter = new ItemAdapter(items);
+        recycler.setAdapter(adapter);
+        return false;
     }
 
     private final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
