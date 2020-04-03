@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import ru.job4j.todolist.R;
-import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
 public class EditFragment extends Fragment implements View.OnClickListener, TextWatcher {
@@ -30,7 +30,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.add, container, false);
+        View view = inflater.inflate(R.layout.new_add, container, false);
         id = getArguments().getInt("id");
         editName = view.findViewById(R.id.editName);
         editDesc = view.findViewById(R.id.editDesc);
@@ -58,15 +58,15 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
 
     @Override
     public void onClick(View v) {
-        Item item = sqlStore.getItem(id);
+        Task task = sqlStore.getItem(id);
         String descText = editDesc.getText().toString();
         if (descText.length() == 0) {
             descText = "description not added";
         }
-        item.setDesc(descText);
-        item.setName(editName.getText().toString());
-        sqlStore.updateItem(item);
-        Intent intent = new Intent(getActivity().getApplicationContext(), ItemsActivity.class);
+        task.setDesc(descText);
+        task.setName(editName.getText().toString());
+        sqlStore.updateItem(task);
+        Intent intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
         startActivity(intent);
     }
 

@@ -2,7 +2,7 @@ package ru.job4j.todolist.store;
 
 import android.database.AbstractCursor;
 
-import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.Task;
 
 public class StoreCursor extends AbstractCursor {
     private final MemStore memStore;
@@ -25,11 +25,11 @@ public class StoreCursor extends AbstractCursor {
 
     @Override
     public String getString(int column) {
-        Item item = memStore.getItem(getPosition());
+        Task task = memStore.getItem(getPosition());
         String value = "";
         if (column == 1) {
-            if (item.getName() != null && item.getName().contains(selection)) {
-                value = item.getName();
+            if (task.getName() != null && task.getName().contains(selection)) {
+                value = task.getName();
             }
         }
         return value;

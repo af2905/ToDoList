@@ -27,7 +27,7 @@ import java.util.Calendar;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
-import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
 import static android.app.Activity.RESULT_OK;
@@ -47,7 +47,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.add, container, false);
+        View view = inflater.inflate(R.layout.new_add, container, false);
         editName = view.findViewById(R.id.editName);
         editDesc = view.findViewById(R.id.editDesc);
         editDate = view.findViewById(R.id.editDate);
@@ -97,11 +97,11 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
                 if (descText.length() == 0) {
                     descText = "description not added";
                 }
-                store.addItem(new Item(editName.getText().toString(),
+                store.addItem(new Task(editName.getText().toString(),
                         descText,
                         Utils.getDate(selectedDate) + " " + Utils.getTime(selectedTime),
                         0));
-                intent = new Intent(getActivity().getApplicationContext(), ItemsActivity.class);
+                intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
                 startActivity(intent);
                 break;
             case R.id.photo:

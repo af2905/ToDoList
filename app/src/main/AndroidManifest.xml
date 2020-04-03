@@ -22,7 +22,7 @@
 
         <activity android:name=".fragments.AddActivity" />
         <activity android:name=".fragments.EditActivity" />
-        <activity android:name=".fragments.ItemsActivity">
+        <activity android:name=".fragments.TasksActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,10 +30,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".fragments.BaseActivity" />
-
-        <receiver
-            android:name=".alarm.AlarmReceiver"
-            android:process=":remote" />
 
     </application>
 

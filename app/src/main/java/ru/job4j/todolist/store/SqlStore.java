@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.Task;
 
 public class SqlStore implements IStore {
     private static SqlStore sqlStore;
@@ -28,16 +28,16 @@ public class SqlStore implements IStore {
     }
 
     @Override
-    public void addItem(Item item) {
+    public void addItem(Task task) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues contentValues = getContentValues(item);
+        ContentValues contentValues = getContentValues(task);
         long id = db.insert(ToDoDbSchema.ToDoTable.TABLE_NAME, null, contentValues);
-        item.setId((int) id);
+        task.setId((int) id);
         db.close();
     }
 
     @Override
-    public Item getItem(int id) {
+    public Task getItem(int id) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(ToDoDbSchema.ToDoTable.TABLE_NAME,
                 new String[]{
@@ -51,7 +51,7 @@ public class SqlStore implements IStore {
         if (cursor != null) {
             cursor.moveToFirst();
         }
-        return new Item(
+        return new Task(
                 cursor.getInt(0),
                 cursor.getString(1),
                 cursor.getString(2),
@@ -61,9 +61,9 @@ public class SqlStore implements IStore {
     }
 
     @Override
-    public List<Item> getSelectedItems(String text) {
+    public List<Task> getSelectedItems(String text) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        List<Item> items = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
         String selectItems = "SELECT * FROM " + ToDoDbSchema.ToDoTable.TABLE_NAME
                 + " WHERE " + ToDoDbSchema.ToDoTable.Cols.NAME
                 + " LIKE '%" + text + "%'"
@@ -72,55 +72,55 @@ public class SqlStore implements IStore {
         Cursor cursor = db.rawQuery(selectItems, null);
         if (cursor.moveToFirst()) {
             do {
-                Item item = new Item(
+                Task task = new Task(
                         cursor.getInt(0),
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getInt(4));
-                items.add(item);
+                tasks.add(task);
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return items;
+        return tasks;
     }
 
     @Override
-    public List<Item> getAllItems() {
+    public List<Task> getAllItems() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        List<Item> items = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
         String selectAllItems = "SELECT * FROM " + ToDoDbSchema.ToDoTable.TABLE_NAME;
         Cursor cursor = db.rawQuery(selectAllItems, null);
         if (cursor.moveToFirst()) {
             do {
-                Item item = new Item(
+                Task task = new Task(
                         cursor.getInt(0),
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getInt(4));
-                items.add(item);
+                tasks.add(task);
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return items;
+        return tasks;
     }
 
     @Override
-    public int updateItem(Item item) {
+    public int updateItem(Task task) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues contentValues = getContentValues(item);
+        ContentValues contentValues = getContentValues(task);
         return db.update(ToDoDbSchema.ToDoTable.TABLE_NAME, contentValues,
                 ToDoDbSchema.ToDoTable.Cols.ID + " = ?",
-                new String[]{String.valueOf(item.getId())});
+                new String[]{String.valueOf(task.getId())});
     }
 
     @Override
-    public void deleteItem(Item item) {
+    public void deleteItem(Task task) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(ToDoDbSchema.ToDoTable.TABLE_NAME,
                 ToDoDbSchema.ToDoTable.Cols.ID + " = ?",
-                new String[]{String.valueOf(item.getId())});
+                new String[]{String.valueOf(task.getId())});
         db.close();
     }
 
@@ -136,12 +136,12 @@ public class SqlStore implements IStore {
         return 0;
     }
 
-    private static ContentValues getContentValues(Item item) {
+    private static ContentValues getContentValues(Task task) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ToDoDbSchema.ToDoTable.Cols.NAME, item.getName());
-        contentValues.put(ToDoDbSchema.ToDoTable.Cols.DESC, item.getDesc());
-        contentValues.put(ToDoDbSchema.ToDoTable.Cols.CREATED, item.getCreated());
-        contentValues.put(ToDoDbSchema.ToDoTable.Cols.DONE, item.getDone());
+        contentValues.put(ToDoDbSchema.ToDoTable.Cols.NAME, task.getName());
+        contentValues.put(ToDoDbSchema.ToDoTable.Cols.DESC, task.getDesc());
+        contentValues.put(ToDoDbSchema.ToDoTable.Cols.CREATED, task.getCreated());
+        contentValues.put(ToDoDbSchema.ToDoTable.Cols.DONE, task.getDone());
         return contentValues;
     }
 }

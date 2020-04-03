@@ -8,11 +8,11 @@ import androidx.fragment.app.Fragment;
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.store.SqlStore;
 
-public class ItemsActivity extends BaseActivity
+public class TasksActivity extends BaseActivity
         implements DeleteDialogFragment.DeleteDialogListener {
     @Override
     public Fragment loadFrg() {
-        return new ItemsFragment();
+        return new TasksFragment();
     }
 
     @Override

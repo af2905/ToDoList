@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Objects;
 
-import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.Task;
 
 public class FileStore implements IStore {
     private static IStore instance;
@@ -31,13 +31,13 @@ public class FileStore implements IStore {
 
 
     @Override
-    public void addItem(Item item) {
+    public void addItem(Task task) {
         File file = new File(context.getFilesDir(), (counter++) + ".txt");
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
-            out.println(item.getName());
-            out.println(item.getDesc());
-            out.println(item.getCreated());
-            out.println(item.getDone());
+            out.println(task.getName());
+            out.println(task.getDesc());
+            out.println(task.getCreated());
+            out.println(task.getDone());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,37 +49,37 @@ public class FileStore implements IStore {
     }
 
     @Override
-    public Item getItem(int id) {
-        Item item = new Item(null, null, null, 0);
+    public Task getItem(int id) {
+        Task task = new Task(null, null, null, 0);
         File file = new File(context.getFilesDir(), id + ".txt");
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-            item.setName(in.readLine());
-            item.setDesc(in.readLine());
-            item.setCreated(in.readLine());
-            item.setDone(Integer.parseInt(in.readLine()));
+            task.setName(in.readLine());
+            task.setDesc(in.readLine());
+            task.setCreated(in.readLine());
+            task.setDone(Integer.parseInt(in.readLine()));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return item;
+        return task;
     }
 
     @Override
-    public List<Item> getSelectedItems(String text) {
+    public List<Task> getSelectedItems(String text) {
         return null;
     }
 
     @Override
-    public List<Item> getAllItems() {
+    public List<Task> getAllItems() {
         return null;
     }
 
     @Override
-    public int updateItem(Item item) {
+    public int updateItem(Task task) {
         return 0;
     }
 
     @Override
-    public void deleteItem(Item item) {
+    public void deleteItem(Task task) {
 
     }
 

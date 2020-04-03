@@ -12,7 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,10 +31,10 @@ import java.util.List;
 import ru.job4j.todolist.DividerItemDecoration;
 import ru.job4j.todolist.MyApplication;
 import ru.job4j.todolist.R;
-import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
-public class ItemsFragment extends Fragment
+public class TasksFragment extends Fragment
         implements View.OnClickListener, SearchView.OnQueryTextListener {
     private RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     private RecyclerView recycler;
@@ -44,7 +43,7 @@ public class ItemsFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.items, container, false);
+        View view = inflater.inflate(R.layout.tasks, container, false);
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -82,8 +81,8 @@ public class ItemsFragment extends Fragment
         int id = R.anim.layout_animation_slide_right;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), id);
         recycler.setLayoutAnimation(animation);
-        List<Item> items = SqlStore.getInstance(getContext()).getAllItems();
-        adapter = new ItemAdapter(items);
+        List<Task> tasks = SqlStore.getInstance(getContext()).getAllItems();
+        adapter = new TaskAdapter(tasks);
         recycler.setAdapter(adapter);
     }
 
@@ -121,73 +120,73 @@ public class ItemsFragment extends Fragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        List<Item> items = SqlStore.getInstance(getContext())
+        List<Task> tasks = SqlStore.getInstance(getContext())
                 .getSelectedItems(newText);
-        adapter = new ItemAdapter(items);
+        adapter = new TaskAdapter(tasks);
         recycler.setAdapter(adapter);
         return false;
     }
 
-    private final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private final List<Item> items;
+    private final class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private final List<Task> tasks;
 
-        private ItemAdapter(List<Item> items) {
-            this.items = items;
+        private TaskAdapter(List<Task> tasks) {
+            this.tasks = tasks;
         }
 
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item, parent, false)) {
+                    .inflate(R.layout.new_task, parent, false)) {
             };
         }
 
         @Override
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
             final SqlStore store = SqlStore.getInstance(getContext());
-            final Item item = items.get(position);
+            final Task task = tasks.get(position);
             final TextView name = holder.itemView.findViewById(R.id.name);
-            name.setText(item.getName());
-            final TextView desc = holder.itemView.findViewById(R.id.description);
-            desc.setText(item.getDesc());
+            name.setText(task.getName());
+           /* final TextView desc = holder.itemView.findViewById(R.id.description);
+            desc.setText(task.getDesc());*/
             final TextView created = holder.itemView.findViewById(R.id.created);
-            created.setText(item.getCreated());
-            final ImageButton editOneItem = holder.itemView.findViewById(R.id.editOneItemBtn);
+            created.setText(task.getCreated());
+           /* final ImageButton editOneItem = holder.itemView.findViewById(R.id.editOneItemBtn);
             editOneItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (item.getDone() == 0) {
+                    if (task.getDone() == 0) {
                         Intent intent = new Intent(getActivity(), EditActivity.class);
-                        intent.putExtra("id", item.getId());
+                        intent.putExtra("id", task.getId());
                         startActivity(intent);
                     }
                 }
-            });
+            });*/
 
-            final ImageButton deleteOneItem = holder.itemView.findViewById(R.id.deleteOneItemBtn);
+            /*final ImageButton deleteOneItem = holder.itemView.findViewById(R.id.deleteOneItemBtn);
             deleteOneItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    store.deleteItem(item);
+                    store.deleteItem(task);
                     // updateUI();
                     runLayoutAnimation(recycler);
                 }
-            });
+            });*/
 
             final CheckBox done = holder.itemView.findViewById(R.id.done);
-            if (item.getDone() == 1) {
+            if (task.getDone() == 1) {
                 done.setChecked(true);
             }
             done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        item.setDone(1);
-                        store.updateItem(item);
+                        task.setDone(1);
+                        store.updateItem(task);
                     } else {
-                        item.setDone(0);
-                        store.updateItem(item);
+                        task.setDone(0);
+                        store.updateItem(task);
                     }
                 }
             });
@@ -195,7 +194,7 @@ public class ItemsFragment extends Fragment
 
         @Override
         public int getItemCount() {
-            return items.size();
+            return tasks.size();
         }
     }
 
@@ -204,8 +203,8 @@ public class ItemsFragment extends Fragment
         final LayoutAnimationController animation =
                 AnimationUtils.loadLayoutAnimation(getContext(), id);
         recyclerView.setLayoutAnimation(animation);
-        List<Item> items = SqlStore.getInstance(getContext()).getAllItems();
-        adapter = new ItemAdapter(items);
+        List<Task> tasks = SqlStore.getInstance(getContext()).getAllItems();
+        adapter = new TaskAdapter(tasks);
         recycler.setAdapter(adapter);
     }
 

@@ -11,9 +11,12 @@
     <string name="find_item">find</string>
     <string name="search_button">search</string>
     <string name="enter_text_to_search">enter text to search</string>
-    <string name="edit_one_item">edit one item</string>
-    <string name="delete_one_item">delete one item</string>
+    <string name="edit_one_item">edit one task</string>
+    <string name="delete_one_item">delete one task</string>
     <string name="photo">photo</string>
     <string name="date">date</string>
     <string name="time">time</string>
+    <string name="reminder_off">reminder off</string>
+    <string name="short_text">short text</string>
+    <string name="notes">notes</string>
 </resources>

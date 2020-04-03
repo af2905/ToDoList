@@ -2,22 +2,22 @@ package ru.job4j.todolist.store;
 
 import java.util.List;
 
-import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.Task;
 
 public interface IStore {
-    void addItem(Item item);
+    void addItem(Task task);
 
-    Item getItem(int id);
+    Task getItem(int id);
 
-    List<Item> getSelectedItems(String text);
+    List<Task> getSelectedItems(String text);
 
-    List<Item> getAllItems();
+    List<Task> getAllItems();
 
     int size();
 
-    int updateItem(Item item);
+    int updateItem(Task task);
 
-    void deleteItem(Item item);
+    void deleteItem(Task task);
 
     void deleteAll();
 }

@@ -2,14 +2,14 @@ package ru.job4j.todolist.model;
 
 import java.util.Objects;
 
-public class Item {
+public class Task {
     private int id;
     private String name;
     private String desc;
     private String created;
     private int done;
 
-    public Item(int id, String name, String desc, String created, int done) {
+    public Task(int id, String name, String desc, String created, int done) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -17,7 +17,7 @@ public class Item {
         this.done = done;
     }
 
-    public Item(String name, String desc, String created, int done) {
+    public Task(String name, String desc, String created, int done) {
         this.name = name;
         this.desc = desc;
         this.created = created;
@@ -72,12 +72,12 @@ public class Item {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Item item = (Item) o;
-        return id == item.id
-                && done == item.done
-                && name.equals(item.name)
-                && Objects.equals(desc, item.desc)
-                && Objects.equals(created, item.created);
+        Task task = (Task) o;
+        return id == task.id
+                && done == task.done
+                && name.equals(task.name)
+                && Objects.equals(desc, task.desc)
+                && Objects.equals(created, task.created);
     }
 
     @Override

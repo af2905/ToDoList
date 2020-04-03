@@ -3,11 +3,11 @@ package ru.job4j.todolist.store;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.job4j.todolist.model.Item;
+import ru.job4j.todolist.model.Task;
 
 public class MemStore implements IStore {
     private static final MemStore INST = new MemStore();
-    private final List<Item> items = new ArrayList<>();
+    private final List<Task> tasks = new ArrayList<>();
 
     private MemStore() {
     }
@@ -17,42 +17,42 @@ public class MemStore implements IStore {
     }
 
     @Override
-    public void addItem(Item item) {
-        this.items.add(item);
+    public void addItem(Task task) {
+        this.tasks.add(task);
     }
 
     @Override
-    public Item getItem(int id) {
-        return items.get(id);
+    public Task getItem(int id) {
+        return tasks.get(id);
     }
 
     @Override
-    public List<Item> getSelectedItems(String text) {
+    public List<Task> getSelectedItems(String text) {
         return null;
     }
 
     @Override
-    public List<Item> getAllItems() {
-        return this.items;
+    public List<Task> getAllItems() {
+        return this.tasks;
     }
 
     @Override
     public int size() {
-        return items.size();
+        return tasks.size();
     }
 
     @Override
-    public int updateItem(Item item) {
+    public int updateItem(Task task) {
         return 0;
     }
 
     @Override
-    public void deleteItem(Item item) {
-        items.remove(item);
+    public void deleteItem(Task task) {
+        tasks.remove(task);
     }
 
     @Override
     public void deleteAll() {
-        items.clear();
+        tasks.clear();
     }
 }
