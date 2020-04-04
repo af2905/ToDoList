@@ -20,8 +20,8 @@ public class TasksActivity extends BaseActivity
         SqlStore.getInstance(getApplicationContext()).deleteAll();
         TextView name = findViewById(R.id.name);
         name.setText("");
-        TextView desc = findViewById(R.id.description);
-        desc.setText("");
+       /* TextView desc = findViewById(R.id.description);
+        desc.setText("");*/
         TextView created = findViewById(R.id.created);
         created.setText("");
     }

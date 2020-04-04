@@ -30,7 +30,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.new_add, container, false);
+        View view = inflater.inflate(R.layout.add, container, false);
         id = getArguments().getInt("id");
         editName = view.findViewById(R.id.editName);
         editDesc = view.findViewById(R.id.editDesc);

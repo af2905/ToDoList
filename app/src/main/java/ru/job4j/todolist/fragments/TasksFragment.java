@@ -50,7 +50,8 @@ public class TasksFragment extends Fragment
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimaryDark, getActivity().getTheme()));
+        toolbar.setTitleTextColor(getResources()
+                .getColor(R.color.colorPrimaryDark, getActivity().getTheme()));
         final FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
         RecyclerView.ItemDecoration decoration
@@ -148,32 +149,8 @@ public class TasksFragment extends Fragment
             final Task task = tasks.get(position);
             final TextView name = holder.itemView.findViewById(R.id.name);
             name.setText(task.getName());
-           /* final TextView desc = holder.itemView.findViewById(R.id.description);
-            desc.setText(task.getDesc());*/
             final TextView created = holder.itemView.findViewById(R.id.created);
             created.setText(task.getCreated());
-           /* final ImageButton editOneItem = holder.itemView.findViewById(R.id.editOneItemBtn);
-            editOneItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (task.getDone() == 0) {
-                        Intent intent = new Intent(getActivity(), EditActivity.class);
-                        intent.putExtra("id", task.getId());
-                        startActivity(intent);
-                    }
-                }
-            });*/
-
-            /*final ImageButton deleteOneItem = holder.itemView.findViewById(R.id.deleteOneItemBtn);
-            deleteOneItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    store.deleteItem(task);
-                    // updateUI();
-                    runLayoutAnimation(recycler);
-                }
-            });*/
-
             final CheckBox done = holder.itemView.findViewById(R.id.done);
             if (task.getDone() == 1) {
                 done.setChecked(true);
@@ -196,16 +173,6 @@ public class TasksFragment extends Fragment
         public int getItemCount() {
             return tasks.size();
         }
-    }
-
-    private void runLayoutAnimation(final RecyclerView recyclerView) {
-        int id = R.anim.layout_animation_fall_down;
-        final LayoutAnimationController animation =
-                AnimationUtils.loadLayoutAnimation(getContext(), id);
-        recyclerView.setLayoutAnimation(animation);
-        List<Task> tasks = SqlStore.getInstance(getContext()).getAllItems();
-        adapter = new TaskAdapter(tasks);
-        recycler.setAdapter(adapter);
     }
 
     @Override

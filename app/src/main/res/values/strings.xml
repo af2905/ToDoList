@@ -18,5 +18,8 @@
     <string name="time">time</string>
     <string name="reminder_off">reminder off</string>
     <string name="short_text">short text</string>
+    <string name="helper_text">the field must not be empty</string>
     <string name="notes">notes</string>
+
 </resources>
+

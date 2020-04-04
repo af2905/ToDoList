@@ -47,7 +47,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.new_add, container, false);
+        View view = inflater.inflate(R.layout.add, container, false);
         editName = view.findViewById(R.id.editName);
         editDesc = view.findViewById(R.id.editDesc);
         editDate = view.findViewById(R.id.editDate);
@@ -59,8 +59,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
         save.setOnClickListener(this);
         photo = view.findViewById(R.id.photo);
         photo.setOnClickListener(this);
-        editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(14)});
-        editDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(24)});
+        editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
         editName.addTextChangedListener(this);
         store = SqlStore.getInstance(getContext());
         return view;
@@ -99,7 +98,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
                 }
                 store.addItem(new Task(editName.getText().toString(),
                         descText,
-                        Utils.getDate(selectedDate) + " " + Utils.getTime(selectedTime),
+                        Utils.getDate(selectedDate),
                         0));
                 intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
                 startActivity(intent);
@@ -141,7 +140,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.length() == 0) {
             save.setEnabled(false);
-            editName.setError("The field must not be empty");
+            editName.setError(getResources().getString(R.string.helper_text));
         } else {
             save.setEnabled(true);
             editName.setError(null);

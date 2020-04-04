@@ -6,7 +6,7 @@ import java.util.Locale;
 public class Utils {
     public static String getDate(long date) {
         SimpleDateFormat dateFormat
-                = new SimpleDateFormat("dd MMM", Locale.getDefault());
+                = new SimpleDateFormat("MMM dd", Locale.getDefault());
         return dateFormat.format(date);
     }
 
