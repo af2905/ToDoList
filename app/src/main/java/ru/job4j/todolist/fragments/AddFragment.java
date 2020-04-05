@@ -28,6 +28,7 @@ import java.util.Calendar;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
+import ru.job4j.todolist.alarm.AlarmHelper;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
@@ -107,11 +108,11 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
                 dialog.show(manager, DIALOG_TIME);
                 break;
             case R.id.save:
-                store.addItem(new Task(editName.getText().toString(),
-                        editNotes.getText().toString(),
-                        selectedDate,
-                        selectedTime,
-                        0));
+                Task task = new Task(editName.getText().toString(), editNotes.getText().toString(),
+                        selectedDate, selectedTime, 0);
+                store.addItem(task);
+                AlarmHelper alarmHelper = AlarmHelper.getInstance();
+                alarmHelper.setAlarm(task);
                 intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
                 startActivity(intent);
                 break;

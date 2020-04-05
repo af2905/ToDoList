@@ -33,6 +33,7 @@ import ru.job4j.todolist.DividerItemDecoration;
 import ru.job4j.todolist.MyApplication;
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
+import ru.job4j.todolist.alarm.AlarmHelper;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
@@ -46,6 +47,7 @@ public class TasksFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasks, container, false);
+        AlarmHelper.getInstance().init(getContext().getApplicationContext());
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -165,12 +167,15 @@ public class TasksFragment extends Fragment
             done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    AlarmHelper alarmHelper = AlarmHelper.getInstance();
                     if (isChecked) {
                         task.setDone(1);
                         store.updateItem(task);
+                        alarmHelper.removeAlarm(task.getId());
                     } else {
                         task.setDone(0);
                         store.updateItem(task);
+                        alarmHelper.setAlarm(task);
                     }
                 }
             });

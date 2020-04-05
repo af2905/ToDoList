@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature
         android:name="android.hardware.camera2"
@@ -22,8 +23,9 @@
             android:name=".store.StoreContentProvider"
             android:authorities="ru.job4j.todolist" />
 
-        <activity android:name=".fragments.AddActivity"
-            android:parentActivityName=".fragments.TasksActivity"/>
+        <activity
+            android:name=".fragments.AddActivity"
+            android:parentActivityName=".fragments.TasksActivity" />
         <activity android:name=".fragments.EditActivity" />
         <activity android:name=".fragments.TasksActivity">
 
@@ -34,6 +36,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".fragments.BaseActivity" />
+
+        <receiver
+            android:name=".alarm.AlarmReceiver"
+            android:process=":remote" />
+
+        <receiver android:name=".alarm.AlarmSetter">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+
+        </receiver>
 
     </application>
 
