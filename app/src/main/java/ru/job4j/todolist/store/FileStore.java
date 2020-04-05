@@ -36,7 +36,8 @@ public class FileStore implements IStore {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
             out.println(task.getName());
             out.println(task.getDesc());
-            out.println(task.getCreated());
+            out.println(task.getDate());
+            out.println(task.getAlarm());
             out.println(task.getDone());
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,12 +51,13 @@ public class FileStore implements IStore {
 
     @Override
     public Task getItem(int id) {
-        Task task = new Task(null, null, null, 0);
+        Task task = new Task(null, null, 0, 0, 0);
         File file = new File(context.getFilesDir(), id + ".txt");
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
             task.setName(in.readLine());
             task.setDesc(in.readLine());
-            task.setCreated(in.readLine());
+            task.setDate(Long.parseLong(in.readLine()));
+            task.setDate(Long.parseLong(in.readLine()));
             task.setDone(Integer.parseInt(in.readLine()));
         } catch (Exception e) {
             e.printStackTrace();

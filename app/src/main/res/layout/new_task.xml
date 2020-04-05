@@ -35,25 +35,25 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imgSmallText"
-            android:layout_width="21dp"
+            android:id="@+id/imgNotes"
+            android:layout_width="20dp"
             android:layout_height="18dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:contentDescription="@string/short_text"
-            android:src="@drawable/ic_short_text_dark_gray_24dp"
             app:layout_constraintStart_toEndOf="@+id/name"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_short_text_dark_gray_24dp" />
 
         <ImageView
             android:id="@+id/imgAlarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
-            android:contentDescription="@string/reminder_off"
-            android:src="@drawable/ic_alarm_off_dark_gray_24dp"
+            android:contentDescription="@string/alarm"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name" />
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            android:src="@drawable/ic_alarm_off_dark_gray_24dp" />
 
         <TextView
             android:id="@+id/alarmOnOff"
@@ -61,12 +61,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:text="@string/reminder_off"
+            tools:text="@string/reminder_off"
             app:layout_constraintStart_toEndOf="@+id/imgAlarm"
             app:layout_constraintTop_toBottomOf="@+id/name" />
 
         <TextView
-            android:id="@+id/created"
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

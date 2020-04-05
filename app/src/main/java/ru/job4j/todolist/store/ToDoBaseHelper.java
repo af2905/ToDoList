@@ -17,10 +17,11 @@ public class ToDoBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + ToDoDbSchema.ToDoTable.TABLE_NAME + " ("
-                + ToDoDbSchema.ToDoTable.Cols.ID + " integer primary key autoincrement, "
+                + ToDoDbSchema.ToDoTable.Cols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ToDoDbSchema.ToDoTable.Cols.NAME + " TEXT, "
                 + ToDoDbSchema.ToDoTable.Cols.DESC + " TEXT, "
-                + ToDoDbSchema.ToDoTable.Cols.CREATED + " TEXT,"
+                + ToDoDbSchema.ToDoTable.Cols.DATE + " LONG, "
+                + ToDoDbSchema.ToDoTable.Cols.ALARM + " LONG, "
                 + ToDoDbSchema.ToDoTable.Cols.DONE + " INTEGER"
                 + ")"
         );
@@ -28,6 +29,7 @@ public class ToDoBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE " + ToDoDbSchema.ToDoTable.TABLE_NAME);
+        onCreate(db);
     }
 }

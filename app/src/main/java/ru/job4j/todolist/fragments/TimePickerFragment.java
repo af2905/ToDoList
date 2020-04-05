@@ -22,7 +22,6 @@ import ru.job4j.todolist.R;
 public class TimePickerFragment extends DialogFragment {
     private static final String ARG_TIME = "time";
     static final String EXTRA_TIME = "todoList.time";
-
     private TimePicker timePicker;
 
     static TimePickerFragment newInstance(Calendar time) {
@@ -36,19 +35,21 @@ public class TimePickerFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Calendar time = (Calendar) getArguments().getSerializable(ARG_TIME);
-        int hour = time.get(Calendar.HOUR_OF_DAY);
-        int minute = time.get(Calendar.MINUTE);
+        Calendar calendarDate = (Calendar) getArguments().getSerializable(ARG_TIME);
+        final int year = calendarDate.get(Calendar.YEAR);
+        final int month = calendarDate.get(Calendar.MONTH);
+        final int day = calendarDate.get(Calendar.DAY_OF_MONTH);
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time, null);
         timePicker = view.findViewById(R.id.timePicker);
-        timePicker.setHour(hour);
-        timePicker.setMinute(minute);
         return new MaterialAlertDialogBuilder(getActivity())
                 .setView(view)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, month);
+                        calendar.set(Calendar.DAY_OF_MONTH, day);
                         calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
                         calendar.set(Calendar.MINUTE, timePicker.getMinute());
                         sendResult(Activity.RESULT_OK, calendar);

@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ import java.util.List;
 import ru.job4j.todolist.DividerItemDecoration;
 import ru.job4j.todolist.MyApplication;
 import ru.job4j.todolist.R;
+import ru.job4j.todolist.Utils;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
@@ -54,24 +56,6 @@ public class TasksFragment extends Fragment
                 .getColor(R.color.colorPrimaryDark, getActivity().getTheme()));
         final FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
-        RecyclerView.ItemDecoration decoration
-                = new DividerItemDecoration(8, 16);
-        recycler.addItemDecoration(decoration);
-        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy < 0) {
-                    fab.show();
-                } else if (dy > 0) {
-                    fab.hide();
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
         SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(this);
         updateUI();
@@ -79,6 +63,9 @@ public class TasksFragment extends Fragment
     }
 
     private void updateUI() {
+        RecyclerView.ItemDecoration decoration
+                = new DividerItemDecoration(8, 16);
+        recycler.addItemDecoration(decoration);
         int id = R.anim.layout_animation_slide_right;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), id);
         recycler.setLayoutAnimation(animation);
@@ -149,8 +136,28 @@ public class TasksFragment extends Fragment
             final Task task = tasks.get(position);
             final TextView name = holder.itemView.findViewById(R.id.name);
             name.setText(task.getName());
-            final TextView created = holder.itemView.findViewById(R.id.created);
-            created.setText(task.getCreated());
+
+            final TextView date = holder.itemView.findViewById(R.id.date);
+            if (task.getDate() != 0) {
+                date.setText(String.valueOf(Utils.getDate(task.getDate())));
+            }
+
+            final ImageView imgAlarm = holder.itemView.findViewById(R.id.imgAlarm);
+            final TextView alarm = holder.itemView.findViewById(R.id.alarmOnOff);
+            if (task.getAlarm() != 0) {
+                alarm.setText(String.valueOf(Utils.getTime(task.getAlarm())));
+                imgAlarm.setImageResource(R.drawable.ic_alarm_dark_gray_24dp);
+                imgAlarm.setColorFilter(getResources()
+                        .getColor(R.color.colorAccent, getActivity().getTheme()));
+            }
+
+            final ImageView imgNotes = holder.itemView.findViewById(R.id.imgNotes);
+            if (task.getDesc().length() != 0) {
+                imgNotes.setImageResource(R.drawable.ic_short_text_dark_gray_24dp);
+                imgNotes.setColorFilter(getResources()
+                        .getColor(R.color.colorAccent, getActivity().getTheme()));
+            }
+
             final CheckBox done = holder.itemView.findViewById(R.id.done);
             if (task.getDone() == 1) {
                 done.setChecked(true);

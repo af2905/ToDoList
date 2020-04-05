@@ -6,21 +6,24 @@ public class Task {
     private int id;
     private String name;
     private String desc;
-    private String created;
+    private long date;
+    private long alarm;
     private int done;
 
-    public Task(int id, String name, String desc, String created, int done) {
+    public Task(int id, String name, String desc, long date, long alarm, int done) {
         this.id = id;
         this.name = name;
         this.desc = desc;
-        this.created = created;
+        this.date = date;
+        this.alarm = alarm;
         this.done = done;
     }
 
-    public Task(String name, String desc, String created, int done) {
+    public Task(String name, String desc, long date, long alarm, int done) {
         this.name = name;
         this.desc = desc;
-        this.created = created;
+        this.date = date;
+        this.alarm = alarm;
         this.done = done;
     }
 
@@ -44,16 +47,24 @@ public class Task {
         return desc;
     }
 
-    public String getCreated() {
-        return created;
-    }
-
     public void setDesc(String desc) {
         this.desc = desc;
     }
 
-    public void setCreated(String created) {
-        this.created = created;
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public long getAlarm() {
+        return alarm;
+    }
+
+    public void setAlarm(long alarm) {
+        this.alarm = alarm;
     }
 
     public int getDone() {
@@ -74,14 +85,15 @@ public class Task {
         }
         Task task = (Task) o;
         return id == task.id
+                && date == task.date
+                && alarm == task.alarm
                 && done == task.done
-                && name.equals(task.name)
-                && Objects.equals(desc, task.desc)
-                && Objects.equals(created, task.created);
+                && Objects.equals(name, task.name)
+                && Objects.equals(desc, task.desc);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, desc, created, done);
+        return Objects.hash(id, name, desc, date, alarm, done);
     }
 }

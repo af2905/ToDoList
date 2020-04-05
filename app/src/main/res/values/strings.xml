@@ -20,6 +20,7 @@
     <string name="short_text">short text</string>
     <string name="helper_text">the field must not be empty</string>
     <string name="notes">notes</string>
+    <string name="alarm">alarm</string>
 
 </resources>
 

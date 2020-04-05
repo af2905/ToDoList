@@ -44,7 +44,8 @@ public class SqlStore implements IStore {
                         ToDoDbSchema.ToDoTable.Cols.ID,
                         ToDoDbSchema.ToDoTable.Cols.NAME,
                         ToDoDbSchema.ToDoTable.Cols.DESC,
-                        ToDoDbSchema.ToDoTable.Cols.CREATED,
+                        ToDoDbSchema.ToDoTable.Cols.DATE,
+                        ToDoDbSchema.ToDoTable.Cols.ALARM,
                         ToDoDbSchema.ToDoTable.Cols.DONE},
                 ToDoDbSchema.ToDoTable.Cols.ID + " = ?", new String[]{String.valueOf(id)},
                 null, null, null, null);
@@ -52,11 +53,12 @@ public class SqlStore implements IStore {
             cursor.moveToFirst();
         }
         return new Task(
-                cursor.getInt(0),
-                cursor.getString(1),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getInt(4));
+                cursor.getInt(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.ID)),
+                cursor.getString(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.NAME)),
+                cursor.getString(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DESC)),
+                cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DATE)),
+                cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.ALARM)),
+                cursor.getInt(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DONE)));
 
     }
 
@@ -67,17 +69,18 @@ public class SqlStore implements IStore {
         String selectItems = "SELECT * FROM " + ToDoDbSchema.ToDoTable.TABLE_NAME
                 + " WHERE " + ToDoDbSchema.ToDoTable.Cols.NAME
                 + " LIKE '%" + text + "%'"
-                + " OR " + ToDoDbSchema.ToDoTable.Cols.CREATED
+                + " OR " + ToDoDbSchema.ToDoTable.Cols.DATE
                 + " LIKE '%" + text + "%'";
         Cursor cursor = db.rawQuery(selectItems, null);
         if (cursor.moveToFirst()) {
             do {
                 Task task = new Task(
-                        cursor.getInt(0),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getInt(4));
+                        cursor.getInt(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.ID)),
+                        cursor.getString(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.NAME)),
+                        cursor.getString(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DESC)),
+                        cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DATE)),
+                        cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.ALARM)),
+                        cursor.getInt(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DONE)));
                 tasks.add(task);
             } while (cursor.moveToNext());
         }
@@ -94,11 +97,12 @@ public class SqlStore implements IStore {
         if (cursor.moveToFirst()) {
             do {
                 Task task = new Task(
-                        cursor.getInt(0),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getInt(4));
+                        cursor.getInt(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.ID)),
+                        cursor.getString(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.NAME)),
+                        cursor.getString(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DESC)),
+                        cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DATE)),
+                        cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.ALARM)),
+                        cursor.getInt(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DONE)));
                 tasks.add(task);
             } while (cursor.moveToNext());
         }
@@ -140,7 +144,8 @@ public class SqlStore implements IStore {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ToDoDbSchema.ToDoTable.Cols.NAME, task.getName());
         contentValues.put(ToDoDbSchema.ToDoTable.Cols.DESC, task.getDesc());
-        contentValues.put(ToDoDbSchema.ToDoTable.Cols.CREATED, task.getCreated());
+        contentValues.put(ToDoDbSchema.ToDoTable.Cols.DATE, task.getDate());
+        contentValues.put(ToDoDbSchema.ToDoTable.Cols.ALARM, task.getAlarm());
         contentValues.put(ToDoDbSchema.ToDoTable.Cols.DONE, task.getDone());
         return contentValues;
     }

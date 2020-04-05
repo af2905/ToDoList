@@ -5,6 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarBack"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary">
+
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -16,7 +33,7 @@
         app:counterMaxLength="20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editName"
@@ -33,7 +50,7 @@
         android:id="@+id/textInputLayout2"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="250dp"
-        android:layout_height="300dp"
+        android:layout_height="260dp"
         android:layout_marginStart="16dp"
         android:hint="@string/notes"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,13 +59,11 @@
         app:layout_constraintVertical_bias="0.06">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editDesc"
+            android:id="@+id/editNotes"
             android:layout_width="match_parent"
-            android:layout_height="290dp"
+            android:layout_height="230dp"
             android:layout_gravity="bottom"
-            android:autofillHints="@string/description"
             android:gravity="start|top"
-
             android:inputType="textMultiLine" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -62,7 +77,6 @@
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
         app:layout_constraintVertical_bias="0.0" />
@@ -75,20 +89,20 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:text="@string/date"
-        app:icon="@drawable/ic_date"
+        app:icon="@drawable/ic_today_dark_gray_24dp"
         app:iconGravity="textEnd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/editTime"
+        android:id="@+id/editAlarm"
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/time"
-        app:icon="@drawable/ic_time"
+        app:icon="@drawable/ic_add_alarm_dark_gray_24dp"
         app:iconGravity="textEnd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editDate" />
@@ -104,6 +118,6 @@
         android:scaleType="centerInside"
         android:src="@android:drawable/ic_menu_report_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTime" />
+        app:layout_constraintTop_toBottomOf="@+id/editAlarm" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

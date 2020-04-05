@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -33,15 +34,16 @@ import ru.job4j.todolist.store.SqlStore;
 import static android.app.Activity.RESULT_OK;
 
 public class AddFragment extends Fragment implements View.OnClickListener, TextWatcher {
-    private EditText editName, editDesc;
-    private Button save, editDate, editTime;
+    private EditText editName, editNotes;
+    private Button save, editDate, editAlarm;
     private ImageView photo;
     private SqlStore store;
-    private long selectedDate;
-    private long selectedTime;
+    private long selectedDate = 0, selectedTime = 0;
     private static final String DIALOG_TIME = "DialogTime";
     private static final int REQUEST_TIME = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Calendar calendarDate;
+    private Calendar calendarTime;
 
     @Nullable
     @Override
@@ -49,20 +51,30 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add, container, false);
         editName = view.findViewById(R.id.editName);
-        editDesc = view.findViewById(R.id.editDesc);
+        editNotes = view.findViewById(R.id.editNotes);
+        editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+        editName.addTextChangedListener(this);
         editDate = view.findViewById(R.id.editDate);
-        editTime = view.findViewById(R.id.editTime);
+        editAlarm = view.findViewById(R.id.editAlarm);
+        editAlarm.setEnabled(false);
         editDate.setOnClickListener(this);
-        editTime.setOnClickListener(this);
+        editAlarm.setOnClickListener(this);
         save = view.findViewById(R.id.save);
         save.setEnabled(false);
         save.setOnClickListener(this);
         photo = view.findViewById(R.id.photo);
         photo.setOnClickListener(this);
-        editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
-        editName.addTextChangedListener(this);
         store = SqlStore.getInstance(getContext());
+        addToolbar(view);
         return view;
+    }
+
+    private void addToolbar(View view) {
+        Toolbar toolbar = view.findViewById(R.id.toolbarBack);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setTitle("");
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -81,24 +93,24 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
                             public void onPositiveButtonClick(Long selection) {
                                 editDate.setText(Utils.getDate(selection));
                                 selectedDate = selection;
+                                calendarDate = Calendar.getInstance();
+                                calendarDate.setTimeInMillis(selection);
+                                editAlarm.setEnabled(true);
                             }
                         });
                 break;
-            case R.id.editTime:
+            case R.id.editAlarm:
                 FragmentManager manager = getFragmentManager();
-                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = calendarDate;
                 TimePickerFragment dialog = TimePickerFragment.newInstance(calendar);
                 dialog.setTargetFragment(AddFragment.this, REQUEST_TIME);
                 dialog.show(manager, DIALOG_TIME);
                 break;
             case R.id.save:
-                String descText = editDesc.getText().toString();
-                if (descText.length() == 0) {
-                    descText = "description not added";
-                }
                 store.addItem(new Task(editName.getText().toString(),
-                        descText,
-                        Utils.getDate(selectedDate),
+                        editNotes.getText().toString(),
+                        selectedDate,
+                        selectedTime,
                         0));
                 intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
                 startActivity(intent);
@@ -125,9 +137,9 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
             photo.setImageBitmap(imageBitmap);
         }
         if (requestCode == REQUEST_TIME) {
-            Calendar calendar = (Calendar) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
-            selectedTime = calendar.getTimeInMillis();
-            editTime.setText(Utils.getTime(calendar.getTimeInMillis()));
+            calendarTime = (Calendar) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            selectedTime = calendarTime.getTimeInMillis();
+            editAlarm.setText(Utils.getTime(calendarTime.getTimeInMillis()));
         }
     }
 

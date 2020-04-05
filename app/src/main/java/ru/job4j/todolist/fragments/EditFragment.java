@@ -33,7 +33,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         View view = inflater.inflate(R.layout.add, container, false);
         id = getArguments().getInt("id");
         editName = view.findViewById(R.id.editName);
-        editDesc = view.findViewById(R.id.editDesc);
+        editDesc = view.findViewById(R.id.editNotes);
         save = view.findViewById(R.id.save);
         save.setOnClickListener(this);
         editName.setText(sqlStore.getItem(id).getName());

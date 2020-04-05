@@ -22,8 +22,8 @@ public class TasksActivity extends BaseActivity
         name.setText("");
        /* TextView desc = findViewById(R.id.description);
         desc.setText("");*/
-        TextView created = findViewById(R.id.created);
-        created.setText("");
+        TextView date = findViewById(R.id.date);
+        date.setText("");
     }
 
     @Override
