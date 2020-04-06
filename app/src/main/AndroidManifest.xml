@@ -26,7 +26,8 @@
         <activity
             android:name=".fragments.AddActivity"
             android:parentActivityName=".fragments.TasksActivity" />
-        <activity android:name=".fragments.EditActivity" />
+        <activity android:name=".fragments.EditActivity"
+            android:parentActivityName=".fragments.TasksActivity"/>
         <activity android:name=".fragments.TasksActivity">
 
             <intent-filter>

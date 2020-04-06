@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +24,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -136,8 +137,18 @@ public class TasksFragment extends Fragment
         public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
             final SqlStore store = SqlStore.getInstance(getContext());
             final Task task = tasks.get(position);
-            final TextView name = holder.itemView.findViewById(R.id.name);
+            final Chip name = holder.itemView.findViewById(R.id.name);
             name.setText(task.getName());
+            name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), EditActivity.class);
+                    intent.putExtra("id", task.getId());
+                    intent.putExtra("date", task.getDate());
+                    intent.putExtra("alarm", task.getAlarm());
+                    startActivity(intent);
+                }
+            });
 
             final TextView date = holder.itemView.findViewById(R.id.date);
             if (task.getDate() != 0) {
@@ -160,7 +171,7 @@ public class TasksFragment extends Fragment
                         .getColor(R.color.colorAccent, getActivity().getTheme()));
             }
 
-            final CheckBox done = holder.itemView.findViewById(R.id.done);
+            final MaterialCheckBox done = holder.itemView.findViewById(R.id.done);
             if (task.getDone() == 1) {
                 done.setChecked(true);
             }
@@ -172,10 +183,12 @@ public class TasksFragment extends Fragment
                         task.setDone(1);
                         store.updateItem(task);
                         alarmHelper.removeAlarm(task.getId());
+                        name.setEnabled(false);
                     } else {
                         task.setDone(0);
                         store.updateItem(task);
                         alarmHelper.setAlarm(task);
+                        name.setEnabled(true);
                     }
                 }
             });

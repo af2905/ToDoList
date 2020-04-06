@@ -6,6 +6,9 @@ public class EditActivity extends BaseActivity {
     @Override
     public Fragment loadFrg() {
         return EditFragment.of(getIntent()
-                .getIntExtra("id", 0));
+                        .getIntExtra("id", 0),
+                getIntent().getLongExtra("date", 0),
+                getIntent().getLongExtra("alarm", 0)
+        );
     }
 }

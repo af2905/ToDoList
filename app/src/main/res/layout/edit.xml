@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addName"
+            android:id="@+id/editName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
@@ -60,7 +60,7 @@
         app:layout_constraintVertical_bias="0.067">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addNotes"
+            android:id="@+id/editNotes"
             android:layout_width="match_parent"
             android:layout_height="230dp"
             android:layout_gravity="bottom"
@@ -69,7 +69,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/saveAdd"
+        android:id="@+id/saveEdit"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,12 +83,12 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/addDate"
+        android:id="@+id/editDate"
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="36dp"
         android:text="@string/date"
         app:icon="@drawable/ic_today_dark_gray_24dp"
         app:iconGravity="textEnd"
@@ -96,29 +96,57 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/addAlarm"
+        android:id="@+id/editAlarm"
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="36dp"
         android:text="@string/time"
         app:icon="@drawable/ic_add_alarm_dark_gray_24dp"
         app:iconGravity="textEnd"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addDate" />
+        app:layout_constraintTop_toBottomOf="@+id/editDate" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/delete"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="91dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/colorPrimary"
+        app:icon="@drawable/ic_delete_dark_gray_24dp"
+        app:iconGravity="textEnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textInputLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarm" />
 
     <ImageView
-        android:id="@+id/photo"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="16dp"
+        android:id="@+id/cancelDate"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="42dp"
         android:layout_marginEnd="16dp"
-        android:contentDescription="@string/photo"
-        android:cropToPadding="true"
-        android:scaleType="centerInside"
-        android:src="@android:drawable/ic_menu_report_image"
+        android:contentDescription="@string/delete"
+        android:src="@drawable/ic_cancel_dark_gray_24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addAlarm" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/editDate"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+    <ImageView
+        android:id="@+id/cancelAlarm"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/delete"
+        android:src="@drawable/ic_cancel_dark_gray_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/editAlarm"
+        app:layout_constraintTop_toBottomOf="@+id/cancelDate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
