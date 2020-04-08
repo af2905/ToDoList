@@ -2,13 +2,18 @@ package ru.job4j.todolist.model;
 
 import java.util.Objects;
 
-public class Task {
+public class Task implements Item {
     private int id;
     private String name;
     private String desc;
     private long date;
     private long alarm;
     private int done;
+
+    @Override
+    public boolean isTask() {
+        return true;
+    }
 
     public Task(int id, String name, String desc, long date, long alarm, int done) {
         this.id = id;

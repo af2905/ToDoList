@@ -11,6 +11,7 @@ public class AlarmHelper {
     private static AlarmHelper instance;
     private Context context;
     private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
 
     public static AlarmHelper getInstance() {
         if (instance == null) {
@@ -26,15 +27,27 @@ public class AlarmHelper {
                 .getSystemService(Context.ALARM_SERVICE);
     }
 
-    public void setAlarm(Task task) {
+    private void setAlarm(Task task) {
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra("_id", task.getId());
         intent.putExtra("name", task.getName());
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(),
+        pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(),
                 task.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    }
+
+    public void setExactAlarm(Task task) {
+        setAlarm(task);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, task.getAlarm(), pendingIntent);
     }
+
+    public void setRepeatingAlarm(Task task) {
+        setAlarm(task);
+        alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP, task.getAlarm(), AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
 
     public void removeAlarm(int id) {
         Intent intent = new Intent(context, AlarmReceiver.class);

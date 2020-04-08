@@ -10,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,8 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -33,7 +28,6 @@ import java.util.List;
 import ru.job4j.todolist.DividerItemDecoration;
 import ru.job4j.todolist.MyApplication;
 import ru.job4j.todolist.R;
-import ru.job4j.todolist.Utils;
 import ru.job4j.todolist.alarm.AlarmHelper;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
@@ -73,7 +67,7 @@ public class TasksFragment extends Fragment
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), id);
         recycler.setLayoutAnimation(animation);
         List<Task> tasks = SqlStore.getInstance(getContext()).getAllItems();
-        adapter = new TaskAdapter(tasks);
+        adapter = new TaskAdapter(getContext(), getActivity(), tasks);
         recycler.setAdapter(adapter);
     }
 
@@ -113,91 +107,9 @@ public class TasksFragment extends Fragment
     public boolean onQueryTextChange(String newText) {
         List<Task> tasks = SqlStore.getInstance(getContext())
                 .getSelectedItems(newText);
-        adapter = new TaskAdapter(tasks);
+        adapter = new TaskAdapter(getContext(), getActivity(), tasks);
         recycler.setAdapter(adapter);
         return false;
-    }
-
-    private final class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private final List<Task> tasks;
-
-        private TaskAdapter(List<Task> tasks) {
-            this.tasks = tasks;
-        }
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.new_task, parent, false)) {
-            };
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-            final SqlStore store = SqlStore.getInstance(getContext());
-            final Task task = tasks.get(position);
-            final Chip name = holder.itemView.findViewById(R.id.name);
-            name.setText(task.getName());
-            name.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), EditActivity.class);
-                    intent.putExtra("id", task.getId());
-                    intent.putExtra("date", task.getDate());
-                    intent.putExtra("alarm", task.getAlarm());
-                    startActivity(intent);
-                }
-            });
-
-            final TextView date = holder.itemView.findViewById(R.id.date);
-            if (task.getDate() != 0) {
-                date.setText(String.valueOf(Utils.getDate(task.getDate())));
-            }
-
-            final ImageView imgAlarm = holder.itemView.findViewById(R.id.imgAlarm);
-            final TextView alarm = holder.itemView.findViewById(R.id.alarmOnOff);
-            if (task.getAlarm() != 0) {
-                alarm.setText(String.valueOf(Utils.getTime(task.getAlarm())));
-                imgAlarm.setImageResource(R.drawable.ic_alarm_dark_gray_24dp);
-                imgAlarm.setColorFilter(getResources()
-                        .getColor(R.color.colorAccent, getActivity().getTheme()));
-            }
-
-            final ImageView imgNotes = holder.itemView.findViewById(R.id.imgNotes);
-            if (task.getDesc().length() != 0) {
-                imgNotes.setImageResource(R.drawable.ic_short_text_dark_gray_24dp);
-                imgNotes.setColorFilter(getResources()
-                        .getColor(R.color.colorAccent, getActivity().getTheme()));
-            }
-
-            final MaterialCheckBox done = holder.itemView.findViewById(R.id.done);
-            if (task.getDone() == 1) {
-                done.setChecked(true);
-            }
-            done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    AlarmHelper alarmHelper = AlarmHelper.getInstance();
-                    if (isChecked) {
-                        task.setDone(1);
-                        store.updateItem(task);
-                        alarmHelper.removeAlarm(task.getId());
-                        name.setEnabled(false);
-                    } else {
-                        task.setDone(0);
-                        store.updateItem(task);
-                        alarmHelper.setAlarm(task);
-                        name.setEnabled(true);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return tasks.size();
-        }
     }
 
     @Override

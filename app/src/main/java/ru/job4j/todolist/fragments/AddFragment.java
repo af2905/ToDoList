@@ -113,7 +113,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
                 sqlStore.addItem(task);
                 if (selectedTime != 0) {
                     AlarmHelper alarmHelper = AlarmHelper.getInstance();
-                    alarmHelper.setAlarm(task);
+                    alarmHelper.setExactAlarm(task);
                 }
                 intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
                 startActivity(intent);

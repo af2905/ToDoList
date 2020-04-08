@@ -20,7 +20,7 @@ public class AlarmSetter extends BroadcastReceiver {
 
         for (Task task : tasks) {
             if (task.getAlarm() != 0) {
-                alarmHelper.setAlarm(task);
+                alarmHelper.setExactAlarm(task);
             }
         }
     }

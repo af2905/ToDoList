@@ -44,7 +44,6 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
     private Calendar calendarTime;
     private int id;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -152,7 +151,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                 sqlStore.updateItem(task);
                 if (selectedTime != 0) {
                     alarmHelper = AlarmHelper.getInstance();
-                    alarmHelper.setAlarm(task);
+                    alarmHelper.setExactAlarm(task);
                 }
                 intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
                 startActivity(intent);
