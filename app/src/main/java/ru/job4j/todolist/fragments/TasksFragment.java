@@ -28,13 +28,14 @@ import java.util.List;
 import ru.job4j.todolist.DividerItemDecoration;
 import ru.job4j.todolist.MyApplication;
 import ru.job4j.todolist.R;
+import ru.job4j.todolist.adapter.TaskAdapter;
 import ru.job4j.todolist.alarm.AlarmHelper;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
 public class TasksFragment extends Fragment
         implements View.OnClickListener, SearchView.OnQueryTextListener {
-    private RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
+    private TaskAdapter adapter;
     private RecyclerView recycler;
 
     @Nullable
@@ -43,6 +44,7 @@ public class TasksFragment extends Fragment
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasks, container, false);
         AlarmHelper.getInstance().init(getContext().getApplicationContext());
+        adapter = new TaskAdapter(getContext(), getActivity());
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -60,15 +62,22 @@ public class TasksFragment extends Fragment
     }
 
     private void updateUI() {
+        List<Task> tasks = SqlStore.getInstance(getContext()).getAllItems();
+        addTasksFromDB(tasks);
         RecyclerView.ItemDecoration decoration
                 = new DividerItemDecoration(8, 16);
         recycler.addItemDecoration(decoration);
         int id = R.anim.layout_animation_slide_right;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), id);
         recycler.setLayoutAnimation(animation);
-        List<Task> tasks = SqlStore.getInstance(getContext()).getAllItems();
-        adapter = new TaskAdapter(getContext(), getActivity(), tasks);
         recycler.setAdapter(adapter);
+    }
+
+    private void addTasksFromDB(List<Task> tasks) {
+        adapter.removeAllTasks();
+        for (int i = 0; i < tasks.size(); i++) {
+            adapter.addSortedTask(tasks.get(i));
+        }
     }
 
     @Override
@@ -107,7 +116,8 @@ public class TasksFragment extends Fragment
     public boolean onQueryTextChange(String newText) {
         List<Task> tasks = SqlStore.getInstance(getContext())
                 .getSelectedItems(newText);
-        adapter = new TaskAdapter(getContext(), getActivity(), tasks);
+        adapter = new TaskAdapter(getContext(), getActivity());
+        addTasksFromDB(tasks);
         recycler.setAdapter(adapter);
         return false;
     }

@@ -1,4 +1,4 @@
-package ru.job4j.todolist.fragments;
+package ru.job4j.todolist.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,23 +16,70 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
 import ru.job4j.todolist.alarm.AlarmHelper;
+import ru.job4j.todolist.fragments.EditActivity;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
 public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
     private Context context;
     private Activity activity;
 
-    TaskAdapter(Context context, Activity activity, List<Task> tasks) {
+    public TaskAdapter(Context context, Activity activity) {
         this.context = context.getApplicationContext();
         this.activity = activity;
-        this.tasks = tasks;
+    }
+
+    private Task getTask(int position) {
+        return tasks.get(position);
+    }
+
+    private void addTask(Task task) {
+        tasks.add(task);
+        notifyItemInserted(getItemCount() - 1);
+    }
+
+    private void addTask(int location, Task task) {
+        tasks.add(location, task);
+        notifyItemInserted(location);
+    }
+
+    public void addSortedTask(Task newTask) {
+        int position = -1;
+        for (int i = 0; i < getItemCount(); i++) {
+            if (getTask(i).isTask()) {
+                Task task = getTask(i);
+                if (newTask.getDate() < task.getDate()) {
+                    position = i;
+                    break;
+                }
+            }
+        }
+        if (position != -1) {
+            addTask(position, newTask);
+        } else {
+            addTask(newTask);
+        }
+    }
+
+    public void removeTask(int location) {
+        if (location >= 0 && location <= getItemCount() - 1) {
+            tasks.remove(location);
+            notifyItemRemoved(location);
+        }
+    }
+
+    public void removeAllTasks() {
+        if (getItemCount() != 0) {
+            tasks = new ArrayList<>();
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -53,6 +100,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, EditActivity.class);
+                intent.putExtra("position", position);
                 intent.putExtra("id", task.getId());
                 intent.putExtra("date", task.getDate());
                 intent.putExtra("alarm", task.getAlarm());

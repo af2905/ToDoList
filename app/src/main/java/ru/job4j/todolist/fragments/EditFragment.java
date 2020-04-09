@@ -26,6 +26,7 @@ import java.util.Calendar;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
+import ru.job4j.todolist.adapter.TaskAdapter;
 import ru.job4j.todolist.alarm.AlarmHelper;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
@@ -42,7 +43,9 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
     private static final int REQUEST_TIME = 2;
     private Calendar calendarDate;
     private Calendar calendarTime;
+    private int position;
     private int id;
+    private TaskAdapter adapter;
 
     @Nullable
     @Override
@@ -50,6 +53,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit, container, false);
         sqlStore = SqlStore.getInstance(getContext());
+        position = getArguments().getInt("position");
         id = getArguments().getInt("id");
         selectedDate = getArguments().getLong("date");
         selectedTime = getArguments().getLong("alarm");
@@ -81,6 +85,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         cancelDate.setOnClickListener(this);
         cancelAlarm = view.findViewById(R.id.cancelAlarm);
         cancelAlarm.setOnClickListener(this);
+        adapter = new TaskAdapter(getContext(), getActivity());
         addToolbar(view);
         return view;
     }
@@ -93,9 +98,10 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    static EditFragment of(int id, long date, long alarm) {
+    static EditFragment of(int position, int id, long date, long alarm) {
         EditFragment fragment = new EditFragment();
         Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
         bundle.putInt("id", id);
         bundle.putLong("date", date);
         bundle.putLong("alarm", alarm);
@@ -139,7 +145,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                 TimePickerFragment dialog = TimePickerFragment.newInstance(calendar);
                 dialog.setTargetFragment(EditFragment.this, REQUEST_TIME);
                 dialog.show(manager, DIALOG_TIME);
-                editDate.setEnabled(false);
+               // editDate.setEnabled(false);
                 break;
             case R.id.saveEdit:
                 task = sqlStore.getItem(id);
@@ -163,7 +169,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                 alarmHelper.removeAlarm(id);
                 editAlarm.setText(R.string.time);
                 selectedTime = 0;
-                editAlarm.setEnabled(false);
+               // editAlarm.setEnabled(false);
                 break;
             case R.id.cancelAlarm:
                 alarmHelper = AlarmHelper.getInstance();
@@ -172,9 +178,10 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                 selectedTime = 0;
                 break;
             case R.id.delete:
+                sqlStore.deleteItem(sqlStore.getItem(id));
+                adapter.removeTask(position);
                 intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
                 startActivity(intent);
-                sqlStore.deleteItem(sqlStore.getItem(id));
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());

@@ -21,6 +21,8 @@
     <string name="helper_text">the field must not be empty</string>
     <string name="notes">notes</string>
     <string name="alarm">alarm</string>
+    <string name="choose_date">choose a date</string>
+    <string name="enter_task_name">enter task name</string>
 
 </resources>
 

@@ -68,8 +68,6 @@ public class SqlStore implements IStore {
         List<Task> tasks = new ArrayList<>();
         String selectItems = "SELECT * FROM " + ToDoDbSchema.ToDoTable.TABLE_NAME
                 + " WHERE " + ToDoDbSchema.ToDoTable.Cols.NAME
-                + " LIKE '%" + text + "%'"
-                + " OR " + ToDoDbSchema.ToDoTable.Cols.DATE
                 + " LIKE '%" + text + "%'";
         Cursor cursor = db.rawQuery(selectItems, null);
         if (cursor.moveToFirst()) {

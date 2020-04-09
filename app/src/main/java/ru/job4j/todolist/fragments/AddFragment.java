@@ -4,13 +4,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,10 +33,10 @@ import ru.job4j.todolist.store.SqlStore;
 
 import static android.app.Activity.RESULT_OK;
 
-public class AddFragment extends Fragment implements View.OnClickListener, TextWatcher {
+public class AddFragment extends Fragment implements View.OnClickListener {
     private TextInputEditText addName, addNotes;
     private MaterialButton save, addDate, addAlarm;
-    private ImageView photo;
+    private ImageView photo, cancelDate;
     private SqlStore sqlStore;
     private long selectedDate = 0, selectedTime = 0;
     private static final String DIALOG_TIME = "DialogTime";
@@ -55,14 +54,14 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
         addName = view.findViewById(R.id.addName);
         addNotes = view.findViewById(R.id.addNotes);
         addName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
-        addName.addTextChangedListener(this);
         addDate = view.findViewById(R.id.addDate);
         addAlarm = view.findViewById(R.id.addAlarm);
-        addAlarm.setEnabled(false);
         addDate.setOnClickListener(this);
         addAlarm.setOnClickListener(this);
+        cancelDate = view.findViewById(R.id.cancelDate);
+        cancelDate.setOnClickListener(this);
+        cancelDate.setVisibility(View.INVISIBLE);
         save = view.findViewById(R.id.saveAdd);
-        save.setEnabled(false);
         save.setOnClickListener(this);
         photo = view.findViewById(R.id.photo);
         photo.setOnClickListener(this);
@@ -82,6 +81,7 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
     public void onClick(View v) {
         AppCompatActivity activity;
         Intent intent;
+        Calendar calendar;
         switch (v.getId()) {
             case R.id.addDate:
                 MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
@@ -96,18 +96,37 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
                                 selectedDate = selection;
                                 calendarDate = Calendar.getInstance();
                                 calendarDate.setTimeInMillis(selection);
-                                addAlarm.setEnabled(true);
+                                cancelDate.setVisibility(View.VISIBLE);
                             }
                         });
                 break;
             case R.id.addAlarm:
                 FragmentManager manager = getFragmentManager();
-                Calendar calendar = calendarDate;
+                if (selectedDate == 0) {
+                    Toast.makeText(getContext(), R.string.choose_date, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                calendar = calendarDate;
                 TimePickerFragment dialog = TimePickerFragment.newInstance(calendar);
                 dialog.setTargetFragment(AddFragment.this, REQUEST_TIME);
                 dialog.show(manager, DIALOG_TIME);
+                addDate.setEnabled(false);
+                break;
+            case R.id.cancelDate:
+                addDate.setText(R.string.date);
+                addDate.setEnabled(true);
+                selectedDate = 0;
+                selectedTime = 0;
+                addAlarm.setText(R.string.time);
                 break;
             case R.id.saveAdd:
+                if (addName.length() == 0) {
+                    Toast.makeText(getContext(), R.string.enter_task_name, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if (selectedDate == 0) {
+                    selectedDate = Calendar.getInstance().getTimeInMillis();
+                }
                 Task task = new Task(addName.getText().toString(), addNotes.getText().toString(),
                         selectedDate, selectedTime, 0);
                 sqlStore.addItem(task);
@@ -144,26 +163,5 @@ public class AddFragment extends Fragment implements View.OnClickListener, TextW
             selectedTime = calendarTime.getTimeInMillis();
             addAlarm.setText(Utils.getTime(calendarTime.getTimeInMillis()));
         }
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (s.length() == 0) {
-            save.setEnabled(false);
-            addName.setError(getResources().getString(R.string.helper_text));
-        } else {
-            save.setEnabled(true);
-            addName.setError(null);
-        }
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
     }
 }
