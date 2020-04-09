@@ -39,6 +39,7 @@ public class TimePickerFragment extends DialogFragment {
         final int year = calendarDate.get(Calendar.YEAR);
         final int month = calendarDate.get(Calendar.MONTH);
         final int day = calendarDate.get(Calendar.DAY_OF_MONTH);
+
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time, null);
         timePicker = view.findViewById(R.id.timePicker);
         return new MaterialAlertDialogBuilder(getActivity())
