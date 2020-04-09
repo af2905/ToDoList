@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,8 +84,10 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
         editAlarm.setOnClickListener(this);
         cancelDate = view.findViewById(R.id.cancelDate);
         cancelDate.setOnClickListener(this);
+        cancelDate.setVisibility(View.INVISIBLE);
         cancelAlarm = view.findViewById(R.id.cancelAlarm);
         cancelAlarm.setOnClickListener(this);
+        cancelAlarm.setVisibility(View.INVISIBLE);
         adapter = new TaskAdapter(getContext(), getActivity());
         addToolbar(view);
         return view;
@@ -129,7 +132,9 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                                 selectedDate = selection;
                                 calendarDate = Calendar.getInstance();
                                 calendarDate.setTimeInMillis(selection);
-                                editAlarm.setEnabled(true);
+                                selectedTime = 0;
+                                editAlarm.setText(R.string.time);
+
                             }
                         });
                 break;
@@ -145,9 +150,30 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                 TimePickerFragment dialog = TimePickerFragment.newInstance(calendar);
                 dialog.setTargetFragment(EditFragment.this, REQUEST_TIME);
                 dialog.show(manager, DIALOG_TIME);
-               // editDate.setEnabled(false);
+                editDate.setEnabled(false);
+                cancelAlarm.setVisibility(View.VISIBLE);
+                cancelDate.setVisibility(View.VISIBLE);
+                break;
+            case R.id.cancelDate:
+                editDate.setText(R.string.date);
+                editDate.setEnabled(true);
+                selectedDate = 0;
+                alarmHelper = AlarmHelper.getInstance();
+                alarmHelper.removeAlarm(id);
+                editAlarm.setText(R.string.time);
+                selectedTime = 0;
+                break;
+            case R.id.cancelAlarm:
+                alarmHelper = AlarmHelper.getInstance();
+                alarmHelper.removeAlarm(id);
+                editAlarm.setText(R.string.time);
+                selectedTime = 0;
                 break;
             case R.id.saveEdit:
+                if (editName.length() == 0) {
+                    Toast.makeText(getContext(), R.string.enter_task_name, Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 task = sqlStore.getItem(id);
                 task.setName(editName.getText().toString());
                 task.setDesc(editNotes.getText().toString());
@@ -161,21 +187,6 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                 }
                 intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
                 startActivity(intent);
-                break;
-            case R.id.cancelDate:
-                editDate.setText(R.string.date);
-                selectedDate = 0;
-                alarmHelper = AlarmHelper.getInstance();
-                alarmHelper.removeAlarm(id);
-                editAlarm.setText(R.string.time);
-                selectedTime = 0;
-               // editAlarm.setEnabled(false);
-                break;
-            case R.id.cancelAlarm:
-                alarmHelper = AlarmHelper.getInstance();
-                alarmHelper.removeAlarm(id);
-                editAlarm.setText(R.string.time);
-                selectedTime = 0;
                 break;
             case R.id.delete:
                 sqlStore.deleteItem(sqlStore.getItem(id));

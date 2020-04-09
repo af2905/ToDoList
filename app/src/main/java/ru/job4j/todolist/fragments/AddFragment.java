@@ -96,7 +96,6 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                                 selectedDate = selection;
                                 calendarDate = Calendar.getInstance();
                                 calendarDate.setTimeInMillis(selection);
-                                cancelDate.setVisibility(View.VISIBLE);
                             }
                         });
                 break;
@@ -111,6 +110,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                 dialog.setTargetFragment(AddFragment.this, REQUEST_TIME);
                 dialog.show(manager, DIALOG_TIME);
                 addDate.setEnabled(false);
+                cancelDate.setVisibility(View.VISIBLE);
                 break;
             case R.id.cancelDate:
                 addDate.setText(R.string.date);
