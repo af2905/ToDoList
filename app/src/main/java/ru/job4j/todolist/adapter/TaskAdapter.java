@@ -31,6 +31,7 @@ import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
 public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private boolean isContainsSeparatorPast;
     private boolean containsSeparatorToday;
     private boolean containsSeparatorTomorrow;
     private boolean containsSeparatorLater;
@@ -71,34 +72,40 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }
         }
-        if (newTask.getDate() != 0) {
-            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-            calendar.setTimeInMillis(newTask.getDate());
-            long today = Calendar.getInstance(
-                    TimeZone.getTimeZone("UTC")).get(Calendar.DAY_OF_YEAR);
-            long tomorrow = Calendar.getInstance(
-                    TimeZone.getTimeZone("UTC")).get(Calendar.DAY_OF_YEAR) + 1;
 
-            if (calendar.get(Calendar.DAY_OF_YEAR) == today) {
-                newTask.setDateStatus(Separator.TYPE_TODAY);
-                if (!containsSeparatorToday) {
-                    containsSeparatorToday = true;
-                    separator = new Separator(Separator.TYPE_TODAY);
-                }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) == tomorrow) {
-                newTask.setDateStatus(Separator.TYPE_TOMORROW);
-                if (!containsSeparatorTomorrow) {
-                    containsSeparatorTomorrow = true;
-                    separator = new Separator(Separator.TYPE_TOMORROW);
-                }
-            } else if (calendar.get(Calendar.DAY_OF_YEAR) > tomorrow) {
-                newTask.setDateStatus(Separator.TYPE_LATER);
-                if (!containsSeparatorLater) {
-                    containsSeparatorLater = true;
-                    separator = new Separator(Separator.TYPE_LATER);
-                }
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTimeInMillis(newTask.getDate());
+        long today = Calendar.getInstance(
+                TimeZone.getTimeZone("UTC")).get(Calendar.DAY_OF_YEAR);
+        long tomorrow = Calendar.getInstance(
+                TimeZone.getTimeZone("UTC")).get(Calendar.DAY_OF_YEAR) + 1;
+
+        if (calendar.get(Calendar.DAY_OF_YEAR) < today) {
+            newTask.setDateStatus(Separator.TYPE_PAST);
+            if (!isContainsSeparatorPast) {
+                isContainsSeparatorPast = true;
+                separator = new Separator(Separator.TYPE_PAST);
+            }
+        } else if (calendar.get(Calendar.DAY_OF_YEAR) == today) {
+            newTask.setDateStatus(Separator.TYPE_TODAY);
+            if (!containsSeparatorToday) {
+                containsSeparatorToday = true;
+                separator = new Separator(Separator.TYPE_TODAY);
+            }
+        } else if (calendar.get(Calendar.DAY_OF_YEAR) == tomorrow) {
+            newTask.setDateStatus(Separator.TYPE_TOMORROW);
+            if (!containsSeparatorTomorrow) {
+                containsSeparatorTomorrow = true;
+                separator = new Separator(Separator.TYPE_TOMORROW);
+            }
+        } else if (calendar.get(Calendar.DAY_OF_YEAR) > tomorrow) {
+            newTask.setDateStatus(Separator.TYPE_LATER);
+            if (!containsSeparatorLater) {
+                containsSeparatorLater = true;
+                separator = new Separator(Separator.TYPE_LATER);
             }
         }
+
         if (position != -1) {
             if (!getItem(position - 1).isTask()) {
                 if (position - 2 >= 0 && getItem((position - 2)).isTask()) {
@@ -106,11 +113,16 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (task.getDateStatus() == newTask.getDateStatus()) {
                         position -= 1;
                     }
-                    if (separator != null) {
-                        addItem(position - 1, separator);
+                    if (position - 2 < 0) {
+                        position -= 1;
                     }
-                    addItem(position, newTask);
+
                 }
+                if (separator != null) {
+                    addItem(position - 1, separator);
+                }
+                addItem(position, newTask);
+
             }
         } else {
             if (separator != null) {
@@ -144,6 +156,9 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void checkSeparators(int type) {
         switch (type) {
+            case Separator.TYPE_PAST:
+                isContainsSeparatorPast = false;
+                break;
             case Separator.TYPE_TODAY:
                 containsSeparatorToday = false;
                 break;
@@ -162,6 +177,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (getItemCount() != 0) {
             items = new ArrayList<>();
             notifyDataSetChanged();
+            isContainsSeparatorPast = false;
             containsSeparatorToday = false;
             containsSeparatorTomorrow = false;
             containsSeparatorLater = false;
@@ -251,6 +267,10 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             SeparatorViewHolder separatorViewHolder = (SeparatorViewHolder) holder;
             separatorViewHolder.type.setText(resources.getString(separator.getType()));
             if (separatorViewHolder.type.getText()
+                    .equals(resources.getString(R.string.separator_past))) {
+                separatorViewHolder.type.setTextColor(
+                        resources.getColor(android.R.color.darker_gray, activity.getTheme()));
+            } else if (separatorViewHolder.type.getText()
                     .equals(resources.getString(R.string.separator_today))) {
                 separatorViewHolder.type.setTextColor(
                         resources.getColor(R.color.colorPrimary, activity.getTheme()));

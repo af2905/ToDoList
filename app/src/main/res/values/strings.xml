@@ -26,6 +26,7 @@
     <string name="separator_today">TODAY</string>
     <string name="separator_tomorrow">TOMORROW</string>
     <string name="separator_later">LATER</string>
+ <string name="separator_past">PAST</string>
 
 
 </resources>
