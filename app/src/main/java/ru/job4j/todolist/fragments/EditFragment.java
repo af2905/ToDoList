@@ -24,6 +24,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
@@ -130,7 +131,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                             public void onPositiveButtonClick(Long selection) {
                                 editDate.setText(Utils.getDate(selection));
                                 selectedDate = selection;
-                                calendarDate = Calendar.getInstance();
+                                calendarDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                                 calendarDate.setTimeInMillis(selection);
                                 selectedTime = 0;
                                 editAlarm.setText(R.string.time);
@@ -142,7 +143,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                 FragmentManager manager = getFragmentManager();
                 Calendar calendar;
                 if (calendarDate == null) {
-                    calendar = Calendar.getInstance();
+                    calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     calendar.setTimeInMillis(selectedDate);
                 } else {
                     calendar = calendarDate;
@@ -190,7 +191,7 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
                 break;
             case R.id.delete:
                 sqlStore.deleteItem(sqlStore.getItem(id));
-                adapter.removeTask(position);
+                adapter.removeItem(position);
                 intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
                 startActivity(intent);
                 break;

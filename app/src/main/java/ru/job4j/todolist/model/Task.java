@@ -9,6 +9,7 @@ public class Task implements Item {
     private long date;
     private long alarm;
     private int done;
+    private int dateStatus;
 
     @Override
     public boolean isTask() {
@@ -78,6 +79,14 @@ public class Task implements Item {
 
     public void setDone(int done) {
         this.done = done;
+    }
+
+    public int getDateStatus() {
+        return dateStatus;
+    }
+
+    public void setDateStatus(int dateStatus) {
+        this.dateStatus = dateStatus;
     }
 
     @Override

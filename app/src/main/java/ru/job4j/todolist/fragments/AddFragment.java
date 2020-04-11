@@ -24,6 +24,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
@@ -94,7 +95,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                             public void onPositiveButtonClick(Long selection) {
                                 addDate.setText(Utils.getDate(selection));
                                 selectedDate = selection;
-                                calendarDate = Calendar.getInstance();
+                                calendarDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                                 calendarDate.setTimeInMillis(selection);
                             }
                         });

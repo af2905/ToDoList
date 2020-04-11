@@ -74,7 +74,7 @@ public class TasksFragment extends Fragment
     }
 
     private void addTasksFromDB(List<Task> tasks) {
-        adapter.removeAllTasks();
+        adapter.removeAllItems();
         for (int i = 0; i < tasks.size(); i++) {
             adapter.addSortedTask(tasks.get(i));
         }

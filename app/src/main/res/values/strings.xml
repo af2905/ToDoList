@@ -23,6 +23,10 @@
     <string name="alarm">alarm</string>
     <string name="choose_date">choose a date</string>
     <string name="enter_task_name">enter task name</string>
+    <string name="separator_today">TODAY</string>
+    <string name="separator_tomorrow">TOMORROW</string>
+    <string name="separator_later">LATER</string>
+
 
 </resources>
 
