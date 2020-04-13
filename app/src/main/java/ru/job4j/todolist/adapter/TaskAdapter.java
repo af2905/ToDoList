@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Item> items = new ArrayList<>();
     private Context context;
     private Activity activity;
+    private final static String TAG = "log";
 
     public TaskAdapter(Context context, Activity activity) {
         this.context = context.getApplicationContext();
@@ -66,6 +68,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         for (int i = 0; i < getItemCount(); i++) {
             if (getItem(i).isTask()) {
                 Task task = (Task) getItem(i);
+                Log.d(TAG, "newTask.getDate() < task.getDate()" + (newTask.getDate() < task.getDate()));
                 if (newTask.getDate() < task.getDate()) {
                     position = i;
                     break;
@@ -82,6 +85,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if (calendar.get(Calendar.DAY_OF_YEAR) < today) {
             newTask.setDateStatus(Separator.TYPE_PAST);
+            newTask.setDone(1);
             if (!isContainsSeparatorPast) {
                 isContainsSeparatorPast = true;
                 separator = new Separator(Separator.TYPE_PAST);
@@ -116,14 +120,12 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (position - 2 < 0) {
                         position -= 1;
                     }
-
                 }
                 if (separator != null) {
                     addItem(position - 1, separator);
                 }
-                addItem(position, newTask);
-
             }
+            addItem(position, newTask);
         } else {
             if (separator != null) {
                 addItem(separator);
@@ -191,14 +193,13 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         switch (viewType) {
             case TYPE_TASK:
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.new_task, parent, false);
+                        .inflate(R.layout.one_task_design, parent, false);
                 Chip name = view.findViewById(R.id.name);
-                ImageView imgNotes = view.findViewById(R.id.imgNotes);
-                ImageView imgAlarm = view.findViewById(R.id.imgAlarm);
-                TextView alarm = view.findViewById(R.id.alarmOnOff);
-                TextView date = view.findViewById(R.id.date);
+                ImageView subTaskIcon = view.findViewById(R.id.sub_task_icon);
+                ImageView alarmIcon = view.findViewById(R.id.alarm_icon);
+                TextView date = view.findViewById(R.id.date_text);
                 MaterialCheckBox done = view.findViewById(R.id.done);
-                return new TaskViewHolder(view, name, imgNotes, imgAlarm, date, alarm, done);
+                return new TaskViewHolder(view, name, subTaskIcon, alarmIcon, date, done);
             case TYPE_SEPARATOR:
                 View separator = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.separator, parent, false);
@@ -234,19 +235,14 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 taskViewHolder.date.setText(String.valueOf(Utils.getDate(task.getDate())));
             }
             if (task.getAlarm() != 0) {
-                taskViewHolder.alarm.setText(String.valueOf(Utils.getTime(task.getAlarm())));
-                taskViewHolder.imgAlarm.setImageResource(R.drawable.ic_alarm_dark_gray_24dp);
-                taskViewHolder.imgAlarm.setColorFilter(resources
-                        .getColor(R.color.colorAccent, activity.getTheme()));
-            }
-            if (task.getDesc().length() != 0) {
-                taskViewHolder.imgNotes.setImageResource(R.drawable.ic_short_text_dark_gray_24dp);
-                taskViewHolder.imgNotes.setColorFilter(resources
-                        .getColor(R.color.colorAccent, activity.getTheme()));
+                taskViewHolder.alarmIcon.setVisibility(View.VISIBLE);
             }
             if (task.getDone() == 1) {
+                AlarmHelper alarmHelper = AlarmHelper.getInstance();
+                alarmHelper.removeAlarm(task.getId());
                 taskViewHolder.done.setChecked(true);
                 taskViewHolder.name.setEnabled(false);
+
             }
             taskViewHolder.done.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 AlarmHelper alarmHelper = AlarmHelper.getInstance();
@@ -302,18 +298,17 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class TaskViewHolder extends RecyclerView.ViewHolder {
         Chip name;
-        ImageView imgNotes, imgAlarm;
-        TextView date, alarm;
+        ImageView subTaskIcon, alarmIcon;
+        TextView date;
         MaterialCheckBox done;
 
-        TaskViewHolder(@NonNull View itemView, Chip name, ImageView imgNotes,
-                       ImageView imgAlarm, TextView date, TextView alarm, MaterialCheckBox done) {
+        TaskViewHolder(@NonNull View itemView, Chip name, ImageView subTaskIcon,
+                       ImageView alarmIcon, TextView date, MaterialCheckBox done) {
             super(itemView);
             this.name = name;
-            this.imgNotes = imgNotes;
-            this.imgAlarm = imgAlarm;
+            this.subTaskIcon = subTaskIcon;
+            this.alarmIcon = alarmIcon;
             this.date = date;
-            this.alarm = alarm;
             this.done = done;
         }
     }

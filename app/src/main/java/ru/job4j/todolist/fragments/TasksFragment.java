@@ -16,11 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -42,17 +42,15 @@ public class TasksFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tasks, container, false);
+        View view = inflater.inflate(R.layout.tasks_row, container, false);
         AlarmHelper.getInstance().init(getContext().getApplicationContext());
         adapter = new TaskAdapter(getContext(), getActivity());
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.bottom_app_bar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources()
-                .getColor(R.color.colorPrimaryDark, getActivity().getTheme()));
         final FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
         SearchView searchView = view.findViewById(R.id.searchView);
@@ -88,17 +86,29 @@ public class TasksFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.items, menu);
+        inflater.inflate(R.menu.main_bottomappbar_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.delete_item) {
-            DialogFragment dialog = new DeleteDialogFragment();
-            dialog.show(getActivity().getSupportFragmentManager(), "deleteDialog");
-            return true;
+        switch (item.getItemId()) {
+            case R.id.remove_all_tasks:
+                new MaterialAlertDialogBuilder(getContext())
+                        .setTitle(getResources().getString(R.string.removal_question_title))
+                        .setMessage(getResources().getString(R.string.removal_question))
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            SqlStore.getInstance(getContext()).deleteAll();
+                            updateUI();
+                        })
+                        .show();
+                return true;
+            case R.id.bottom_bar_done:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

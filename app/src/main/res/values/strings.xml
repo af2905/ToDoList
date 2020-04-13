@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">ToDoList</string>
     <string name="add_item">add</string>
-    <string name="delete_all">delete all</string>
-    <string name="removal_warning">"Are you sure you want to delete everything?"</string>
+    <string name="removal_question">"All tasks will be deleted permanently."</string>
+    <string name="removal_question_title">"Delete all tasks?"</string>
     <string name="done">done</string>
     <string name="task">task</string>
     <string name="description">description</string>
@@ -26,7 +26,8 @@
     <string name="separator_today">TODAY</string>
     <string name="separator_tomorrow">TOMORROW</string>
     <string name="separator_later">LATER</string>
- <string name="separator_past">PAST</string>
+    <string name="separator_past">PAST</string>
+    <string name="delete_all_tasks">delete all tasks</string>
 
 
 </resources>

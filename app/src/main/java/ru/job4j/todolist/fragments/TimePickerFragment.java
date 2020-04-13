@@ -2,7 +2,6 @@ package ru.job4j.todolist.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -44,19 +43,17 @@ public class TimePickerFragment extends DialogFragment {
         timePicker = view.findViewById(R.id.timePicker);
         return new MaterialAlertDialogBuilder(getActivity())
                 .setView(view)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, day);
-                        calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
-                        calendar.set(Calendar.MINUTE, timePicker.getMinute());
-                        sendResult(Activity.RESULT_OK, calendar);
-                    }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.YEAR, year);
+                    calendar.set(Calendar.MONTH, month);
+                    calendar.set(Calendar.DAY_OF_MONTH, day);
+                    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                    calendar.set(Calendar.MINUTE, timePicker.getMinute());
+                    sendResult(Activity.RESULT_OK, calendar);
                 })
-                .setNegativeButton(android.R.string.cancel, null)
+                .setNegativeButton(android.R.string.cancel,
+                        (dialog, which) -> sendResult(Activity.RESULT_CANCELED, null))
                 .create();
     }
 
@@ -68,6 +65,5 @@ public class TimePickerFragment extends DialogFragment {
         intent.putExtra(EXTRA_TIME, calendar);
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
     }
-
 }
 
