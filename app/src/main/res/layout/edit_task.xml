@@ -29,7 +29,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/addName"
+                    android:id="@+id/editName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
@@ -50,7 +50,7 @@
             android:paddingEnd="16dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/addDate"
+                android:id="@+id/editDate"
                 style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                 tools:text="@string/date" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/addAlarm"
+                android:id="@+id/editAlarm"
                 style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
     </LinearLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_app_bar_add"
+        android:id="@+id/bottom_app_bar_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -113,6 +113,6 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorAccent"
         android:src="@drawable/ic_done_white_24dp"
-        app:layout_anchor="@+id/bottom_app_bar_add" />
+        app:layout_anchor="@+id/bottom_app_bar_edit" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

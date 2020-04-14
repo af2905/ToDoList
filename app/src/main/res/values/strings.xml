@@ -28,6 +28,7 @@
     <string name="separator_later">LATER</string>
     <string name="separator_past">PAST</string>
     <string name="delete_all_tasks">delete all tasks</string>
+    <string name="cancel">cancel</string>
 
 
 </resources>

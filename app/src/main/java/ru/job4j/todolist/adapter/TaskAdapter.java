@@ -75,7 +75,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }
         }
-
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         calendar.setTimeInMillis(newTask.getDate());
         long today = Calendar.getInstance(
@@ -155,7 +154,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-
     private void checkSeparators(int type) {
         switch (type) {
             case Separator.TYPE_PAST:
@@ -221,7 +219,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.itemView.setEnabled(true);
             final Task task = (Task) item;
             final TaskViewHolder taskViewHolder = (TaskViewHolder) holder;
-
             taskViewHolder.name.setText(task.getName());
             taskViewHolder.name.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, EditActivity.class);
@@ -236,13 +233,16 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             if (task.getAlarm() != 0) {
                 taskViewHolder.alarmIcon.setVisibility(View.VISIBLE);
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                if (task.getAlarm() < calendar.getTimeInMillis()) {
+                    taskViewHolder.alarmIcon.setImageResource(R.drawable.ic_notifications_active_red_24dp);
+                }
             }
             if (task.getDone() == 1) {
                 AlarmHelper alarmHelper = AlarmHelper.getInstance();
                 alarmHelper.removeAlarm(task.getId());
                 taskViewHolder.done.setChecked(true);
                 taskViewHolder.name.setEnabled(false);
-
             }
             taskViewHolder.done.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 AlarmHelper alarmHelper = AlarmHelper.getInstance();
@@ -315,7 +315,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class SeparatorViewHolder extends RecyclerView.ViewHolder {
         TextView type;
-
 
         SeparatorViewHolder(@NonNull View itemView, TextView type) {
             super(itemView);

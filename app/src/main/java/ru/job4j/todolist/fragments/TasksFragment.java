@@ -143,19 +143,4 @@ public class TasksFragment extends Fragment
         super.onPause();
         MyApplication.activityPaused();
     }
-
-    /* private void loadStore() {
-        String selection = "a";
-        Cursor cursor = this.getActivity().getContentResolver()
-                .query(StoreContentProvider.CONTENT_URI, null,
-                        selection, null,
-                        null, null);
-        try {
-            while (cursor.moveToNext()) {
-                Log.d("ContentProvider", cursor.getString(1));
-            }
-        } finally {
-            cursor.close();
-        }
-    }*/
 }
