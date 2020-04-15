@@ -2,10 +2,10 @@ package ru.job4j.todolist.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,86 +20,114 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
-import ru.job4j.todolist.adapter.TaskAdapter;
+import ru.job4j.todolist.adapter.CurrentTaskAdapter;
 import ru.job4j.todolist.alarm.AlarmHelper;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
 import static android.app.Activity.RESULT_OK;
 
-public class EditFragment extends Fragment implements View.OnClickListener, TextWatcher {
-    private TextInputEditText editName, editNotes;
-    private MaterialButton save, delete, editDate, editAlarm;
+public class EditFragment extends Fragment implements View.OnClickListener {
+    private TextInputEditText editName;
+    private MaterialButton editDate, editAlarm;
     private SqlStore sqlStore;
     private long selectedDate, selectedTime;
-    private ImageView cancelDate, cancelAlarm;
+    private ImageView cancel;
     private static final String DIALOG_TIME = "DialogTime";
-    private static final int REQUEST_TIME = 2;
+    private static final int REQUEST_TIME = 1;
     private Calendar calendarDate;
     private Calendar calendarTime;
     private int position;
     private int id;
-    private TaskAdapter adapter;
+    private CurrentTaskAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.edit, container, false);
+        View view = inflater.inflate(R.layout.edit_task, container, false);
         sqlStore = SqlStore.getInstance(getContext());
-        position = getArguments().getInt("position");
-        id = getArguments().getInt("id");
-        selectedDate = getArguments().getLong("date");
-        selectedTime = getArguments().getLong("alarm");
-        editName = view.findViewById(R.id.editName);
-        editNotes = view.findViewById(R.id.editNotes);
-        save = view.findViewById(R.id.saveEdit);
-        save.setOnClickListener(this);
-        delete = view.findViewById(R.id.delete);
-        delete.setOnClickListener(this);
-        editName.setText(sqlStore.getItem(id).getName());
-        editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
-        editName.addTextChangedListener(this);
-        editNotes.setText(sqlStore.getItem(id).getDesc());
-        editDate = view.findViewById(R.id.editDate);
-        if (selectedDate == 0) {
-            editDate.setText(R.string.date);
-        } else {
-            editDate.setText(Utils.getDate(selectedDate));
+        if (getArguments() != null) {
+            position = getArguments().getInt("position");
+            selectedDate = getArguments().getLong("date");
+            selectedTime = getArguments().getLong("alarm");
+            id = getArguments().getInt("id");
         }
+        editName = view.findViewById(R.id.editName);
+        editName.setText(sqlStore.getItem(id).getName());
+        editDate = view.findViewById(R.id.editDate);
+        editDate.setText(Utils.getDate(selectedDate));
         editDate.setOnClickListener(this);
         editAlarm = view.findViewById(R.id.editAlarm);
+        cancel = view.findViewById(R.id.cancel);
         if (selectedTime == 0) {
-            editAlarm.setText(R.string.time);
+            editAlarm.setVisibility(View.INVISIBLE);
+            cancel.setVisibility(View.INVISIBLE);
         } else {
+            editAlarm.setVisibility(View.VISIBLE);
+            cancel.setVisibility(View.VISIBLE);
             editAlarm.setText(Utils.getTime(selectedTime));
         }
         editAlarm.setOnClickListener(this);
-        cancelDate = view.findViewById(R.id.cancelDate);
-        cancelDate.setOnClickListener(this);
-        cancelDate.setVisibility(View.INVISIBLE);
-        cancelAlarm = view.findViewById(R.id.cancelAlarm);
-        cancelAlarm.setOnClickListener(this);
-        cancelAlarm.setVisibility(View.INVISIBLE);
-        adapter = new TaskAdapter(getContext(), getActivity());
+        cancel.setOnClickListener(this);
+        adapter = new CurrentTaskAdapter(Objects.requireNonNull(getContext()), getActivity());
         addToolbar(view);
+        final FloatingActionButton fab = view.findViewById(R.id.fab_save);
+        fab.setOnClickListener(this);
         return view;
     }
 
     private void addToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.toolbarBack);
+        Toolbar toolbar = view.findViewById(R.id.bottom_app_bar_edit);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setTitle("");
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (activity != null) {
+            activity.setSupportActionBar(toolbar);
+        }
+        if (activity != null) {
+            Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.edit_bottomappbar_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.bottom_bar_date:
+                showCalendarForDateSelection();
+                return true;
+            case R.id.bottom_bar_alarm:
+                showCalendarForAlarmSelection();
+                return true;
+            case R.id.bottom_bar_delete:
+                sqlStore.deleteItem(sqlStore.getItem(id));
+                adapter.removeItem(position);
+                Intent intent = new Intent(Objects.requireNonNull(getActivity())
+                        .getApplicationContext(), CurrentTasksActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     static EditFragment of(int position, int id, long date, long alarm) {
@@ -115,84 +143,49 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
 
     @Override
     public void onClick(View v) {
-        AppCompatActivity activity;
-        Intent intent;
-        Task task;
-        AlarmHelper alarmHelper;
         switch (v.getId()) {
             case R.id.editDate:
-                MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-                MaterialDatePicker<Long> picker = builder.build();
-                activity = (AppCompatActivity) getActivity();
-                picker.show(activity.getSupportFragmentManager(), picker.toString());
-                picker.addOnPositiveButtonClickListener(
-                        new MaterialPickerOnPositiveButtonClickListener<Long>() {
-                            @Override
-                            public void onPositiveButtonClick(Long selection) {
-                                editDate.setText(Utils.getDate(selection));
-                                selectedDate = selection;
-                                calendarDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                                calendarDate.setTimeInMillis(selection);
-                                selectedTime = 0;
-                                editAlarm.setText(R.string.time);
-
-                            }
-                        });
+                showCalendarForDateSelection();
                 break;
             case R.id.editAlarm:
-                FragmentManager manager = getFragmentManager();
-                Calendar calendar;
-                if (calendarDate == null) {
-                    calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                    calendar.setTimeInMillis(selectedDate);
-                } else {
-                    calendar = calendarDate;
-                }
-                TimePickerFragment dialog = TimePickerFragment.newInstance(calendar);
-                dialog.setTargetFragment(EditFragment.this, REQUEST_TIME);
-                dialog.show(manager, DIALOG_TIME);
-                editDate.setEnabled(false);
-                cancelAlarm.setVisibility(View.VISIBLE);
-                cancelDate.setVisibility(View.VISIBLE);
+                showCalendarForAlarmSelection();
                 break;
-            case R.id.cancelDate:
-                editDate.setText(R.string.date);
-                editDate.setEnabled(true);
-                selectedDate = 0;
-                alarmHelper = AlarmHelper.getInstance();
-                alarmHelper.removeAlarm(id);
-                editAlarm.setText(R.string.time);
+            case R.id.cancel:
                 selectedTime = 0;
+                cancel.setVisibility(View.INVISIBLE);
+                editAlarm.setVisibility(View.INVISIBLE);
                 break;
-            case R.id.cancelAlarm:
-                alarmHelper = AlarmHelper.getInstance();
-                alarmHelper.removeAlarm(id);
-                editAlarm.setText(R.string.time);
-                selectedTime = 0;
-                break;
-            case R.id.saveEdit:
+            case R.id.fab_save:
                 if (editName.length() == 0) {
                     Toast.makeText(getContext(), R.string.enter_task_name, Toast.LENGTH_SHORT).show();
                     break;
                 }
-                task = sqlStore.getItem(id);
-                task.setName(editName.getText().toString());
-                task.setDesc(editNotes.getText().toString());
+                if (selectedDate == 0) {
+                    selectedDate = calendarDate.getTimeInMillis();
+                }
+                if (selectedTime != 0) {
+                    calendarTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    calendarDate.setTimeInMillis(selectedDate);
+                    calendarTime.setTimeInMillis(selectedTime);
+                    if (calendarDate.get(Calendar.DAY_OF_YEAR) != calendarTime.get(Calendar.DAY_OF_YEAR)) {
+                        calendarTime.set(Calendar.MONTH, calendarDate.get(Calendar.MONTH));
+                        calendarTime.set(Calendar.DAY_OF_MONTH, calendarDate.get(Calendar.DAY_OF_MONTH));
+                        selectedTime = calendarTime.getTimeInMillis();
+                    }
+                }
+                Task task = sqlStore.getItem(id);
+                task.setName(Objects.requireNonNull(editName.getText()).toString());
+                task.setDesc("");
                 task.setDate(selectedDate);
                 task.setAlarm(selectedTime);
                 task.setDone(0);
                 sqlStore.updateItem(task);
                 if (selectedTime != 0) {
-                    alarmHelper = AlarmHelper.getInstance();
+                    AlarmHelper alarmHelper = AlarmHelper.getInstance();
                     alarmHelper.setExactAlarm(task);
                 }
-                intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.delete:
-                sqlStore.deleteItem(sqlStore.getItem(id));
-                adapter.removeItem(position);
-                intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
+                Intent intent = new Intent(Objects.requireNonNull(getActivity())
+                        .getApplicationContext(), CurrentTasksActivity.class);
                 startActivity(intent);
                 break;
             default:
@@ -206,30 +199,49 @@ public class EditFragment extends Fragment implements View.OnClickListener, Text
             return;
         }
         if (requestCode == REQUEST_TIME) {
-            calendarTime = (Calendar) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
-            selectedTime = calendarTime.getTimeInMillis();
-            editAlarm.setText(Utils.getTime(calendarTime.getTimeInMillis()));
+            if (data != null) {
+                calendarTime = (Calendar) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            }
+            if (calendarTime != null) {
+                selectedTime = calendarTime.getTimeInMillis();
+            }
+            if (calendarTime != null) {
+                editAlarm.setText(Utils.getTime(calendarTime.getTimeInMillis()));
+            }
+            editAlarm.setVisibility(View.VISIBLE);
+            editAlarm.setText(Utils.getTime(selectedTime));
+            cancel.setVisibility(View.VISIBLE);
         }
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (s.length() == 0) {
-            save.setEnabled(false);
-            editName.setError(getResources().getString(R.string.helper_text));
-        } else {
-            save.setEnabled(true);
-            editName.setError(null);
+    private void showCalendarForDateSelection() {
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+        MaterialDatePicker<Long> picker = builder.build();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            picker.show(activity.getSupportFragmentManager(), picker.toString());
         }
+        picker.addOnPositiveButtonClickListener(
+                selection -> {
+                    editDate.setText(Utils.getDate(selection));
+                    selectedDate = selection;
+                    calendarDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    calendarDate.setTimeInMillis(selection);
+                });
     }
 
-    @Override
-    public void afterTextChanged(Editable s) {
-
+    private void showCalendarForAlarmSelection() {
+        FragmentManager manager = getFragmentManager();
+        if (calendarDate == null) {
+            calendarDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            Date date = new Date(selectedDate);
+            calendarDate.setTime(date);
+        }
+        Calendar calendar = calendarDate;
+        TimePickerFragment dialog = TimePickerFragment.newInstance(calendar);
+        dialog.setTargetFragment(EditFragment.this, REQUEST_TIME);
+        if (manager != null) {
+            dialog.show(manager, DIALOG_TIME);
+        }
     }
 }

@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 import ru.job4j.todolist.R;
 
@@ -34,14 +35,16 @@ public class TimePickerFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Calendar calendarDate = (Calendar) getArguments().getSerializable(ARG_TIME);
+        Calendar calendarDate = null;
+        if (getArguments() != null) {
+            calendarDate = (Calendar) getArguments().getSerializable(ARG_TIME);
+        }
         final int year = calendarDate.get(Calendar.YEAR);
         final int month = calendarDate.get(Calendar.MONTH);
         final int day = calendarDate.get(Calendar.DAY_OF_MONTH);
-
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time, null);
         timePicker = view.findViewById(R.id.timePicker);
-        return new MaterialAlertDialogBuilder(getActivity())
+        return new MaterialAlertDialogBuilder(Objects.requireNonNull(getActivity()))
                 .setView(view)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     Calendar calendar = Calendar.getInstance();

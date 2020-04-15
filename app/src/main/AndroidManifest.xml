@@ -25,10 +25,10 @@
 
         <activity
             android:name=".fragments.AddActivity"
-            android:parentActivityName=".fragments.TasksActivity" />
+            android:parentActivityName=".fragments.CurrentTasksActivity" />
         <activity android:name=".fragments.EditActivity"
-            android:parentActivityName=".fragments.TasksActivity"/>
-        <activity android:name=".fragments.TasksActivity">
+            android:parentActivityName=".fragments.CurrentTasksActivity"/>
+        <activity android:name=".fragments.CurrentTasksActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

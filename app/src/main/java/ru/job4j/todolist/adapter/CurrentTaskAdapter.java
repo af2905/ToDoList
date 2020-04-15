@@ -31,7 +31,7 @@ import ru.job4j.todolist.model.Separator;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
-public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private boolean isContainsSeparatorPast;
     private boolean containsSeparatorToday;
     private boolean containsSeparatorTomorrow;
@@ -43,7 +43,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Activity activity;
     private final static String TAG = "log";
 
-    public TaskAdapter(Context context, Activity activity) {
+    public CurrentTaskAdapter(Context context, Activity activity) {
         this.context = context.getApplicationContext();
         this.activity = activity;
     }

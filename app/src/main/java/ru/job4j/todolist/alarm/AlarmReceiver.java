@@ -13,7 +13,7 @@ import androidx.core.app.NotificationCompat;
 
 import ru.job4j.todolist.MyApplication;
 import ru.job4j.todolist.R;
-import ru.job4j.todolist.fragments.TasksActivity;
+import ru.job4j.todolist.fragments.CurrentTasksActivity;
 
 public class AlarmReceiver extends BroadcastReceiver {
     private static final String CHANNEL_ID = String.valueOf(R.string.app_name);
@@ -23,7 +23,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         int id = intent.getIntExtra("_id", 0);
         String name = intent.getStringExtra("name");
 
-        Intent resultIntent = new Intent(context, TasksActivity.class);
+        Intent resultIntent = new Intent(context, CurrentTasksActivity.class);
 
         if (MyApplication.isActivityVisible()) {
             resultIntent = intent;
@@ -53,8 +53,12 @@ public class AlarmReceiver extends BroadcastReceiver {
             channel.enableLights(true);
             channel.setLightColor(Color.RED);
             channel.enableVibration(false);
-            notificationManager.createNotificationChannel(channel);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
         }
-        notificationManager.notify(id, builder.build());
+        if (notificationManager != null) {
+            notificationManager.notify(id, builder.build());
+        }
     }
 }

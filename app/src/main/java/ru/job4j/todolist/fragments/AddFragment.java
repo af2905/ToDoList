@@ -24,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import ru.job4j.todolist.R;
@@ -73,8 +74,12 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     private void addToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.bottom_app_bar_add);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (activity != null) {
+            activity.setSupportActionBar(toolbar);
+        }
+        if (activity != null) {
+           Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -104,7 +109,6 @@ public class AddFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Intent intent;
         switch (v.getId()) {
             case R.id.addDate:
                 showCalendarForDateSelection();
@@ -134,14 +138,16 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                         selectedTime = calendarTime.getTimeInMillis();
                     }
                 }
-                Task task = new Task(addName.getText().toString(), "",
+                Task task = new Task(Objects.requireNonNull(addName.getText()).toString(), "",
                         selectedDate, selectedTime, 0);
                 sqlStore.addItem(task);
                 if (selectedTime != 0) {
                     AlarmHelper alarmHelper = AlarmHelper.getInstance();
                     alarmHelper.setExactAlarm(task);
                 }
-                intent = new Intent(getActivity().getApplicationContext(), TasksActivity.class);
+                Intent intent = new Intent(
+                        Objects.requireNonNull(getActivity())
+                                .getApplicationContext(), CurrentTasksActivity.class);
                 startActivity(intent);
                 break;
             default:
@@ -155,9 +161,15 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             return;
         }
         if (requestCode == REQUEST_TIME) {
-            calendarTime = (Calendar) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
-            selectedTime = calendarTime.getTimeInMillis();
-            addAlarm.setText(Utils.getTime(calendarTime.getTimeInMillis()));
+            if (data != null) {
+                calendarTime = (Calendar) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            }
+            if (calendarTime != null) {
+                selectedTime = calendarTime.getTimeInMillis();
+            }
+            if (calendarTime != null) {
+                addAlarm.setText(Utils.getTime(calendarTime.getTimeInMillis()));
+            }
             addAlarm.setVisibility(View.VISIBLE);
             addAlarm.setText(Utils.getTime(selectedTime));
             cancel.setVisibility(View.VISIBLE);
@@ -168,7 +180,9 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         MaterialDatePicker<Long> picker = builder.build();
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        picker.show(activity.getSupportFragmentManager(), picker.toString());
+        if (activity != null) {
+            picker.show(activity.getSupportFragmentManager(), picker.toString());
+        }
         picker.addOnPositiveButtonClickListener(
                 selection -> {
                     addDate.setText(Utils.getDate(selection));
@@ -183,6 +197,8 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         Calendar calendar = calendarDate;
         TimePickerFragment dialog = TimePickerFragment.newInstance(calendar);
         dialog.setTargetFragment(AddFragment.this, REQUEST_TIME);
-        dialog.show(manager, DIALOG_TIME);
+        if (manager != null) {
+            dialog.show(manager, DIALOG_TIME);
+        }
     }
 }

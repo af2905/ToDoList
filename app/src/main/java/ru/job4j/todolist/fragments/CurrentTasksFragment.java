@@ -24,18 +24,19 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.Objects;
 
 import ru.job4j.todolist.DividerItemDecoration;
 import ru.job4j.todolist.MyApplication;
 import ru.job4j.todolist.R;
-import ru.job4j.todolist.adapter.TaskAdapter;
+import ru.job4j.todolist.adapter.CurrentTaskAdapter;
 import ru.job4j.todolist.alarm.AlarmHelper;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
-public class TasksFragment extends Fragment
+public class CurrentTasksFragment extends Fragment
         implements View.OnClickListener, SearchView.OnQueryTextListener {
-    private TaskAdapter adapter;
+    private CurrentTaskAdapter adapter;
     private RecyclerView recycler;
 
     @Nullable
@@ -43,14 +44,16 @@ public class TasksFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasks_row, container, false);
-        AlarmHelper.getInstance().init(getContext().getApplicationContext());
-        adapter = new TaskAdapter(getContext(), getActivity());
+        AlarmHelper.getInstance().init(Objects.requireNonNull(getContext()).getApplicationContext());
+        adapter = new CurrentTaskAdapter(getContext(), getActivity());
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         Toolbar toolbar = view.findViewById(R.id.bottom_app_bar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
+        if (activity != null) {
+            activity.setSupportActionBar(toolbar);
+        }
         final FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
         SearchView searchView = view.findViewById(R.id.searchView);
@@ -93,7 +96,7 @@ public class TasksFragment extends Fragment
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.remove_all_tasks:
-                new MaterialAlertDialogBuilder(getContext())
+                new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
                         .setTitle(getResources().getString(R.string.removal_question_title))
                         .setMessage(getResources().getString(R.string.removal_question))
                         .setNegativeButton(android.R.string.cancel, null)
@@ -126,7 +129,7 @@ public class TasksFragment extends Fragment
     public boolean onQueryTextChange(String newText) {
         List<Task> tasks = SqlStore.getInstance(getContext())
                 .getSelectedItems(newText);
-        adapter = new TaskAdapter(getContext(), getActivity());
+        adapter = new CurrentTaskAdapter(Objects.requireNonNull(getContext()), getActivity());
         addTasksFromDB(tasks);
         recycler.setAdapter(adapter);
         return false;
