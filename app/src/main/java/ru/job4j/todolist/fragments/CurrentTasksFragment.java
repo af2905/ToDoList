@@ -43,7 +43,7 @@ public class CurrentTasksFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tasks_row, container, false);
+        View view = inflater.inflate(R.layout.current_tasks_row, container, false);
         AlarmHelper.getInstance().init(Objects.requireNonNull(getContext()).getApplicationContext());
         adapter = new CurrentTaskAdapter(getContext(), getActivity());
         recycler = view.findViewById(R.id.recycler);
@@ -63,7 +63,7 @@ public class CurrentTasksFragment extends Fragment
     }
 
     private void updateUI() {
-        List<Task> tasks = SqlStore.getInstance(getContext()).getAllItems();
+        List<Task> tasks = SqlStore.getInstance(getContext()).getCurrentItems();
         addTasksFromDB(tasks);
         RecyclerView.ItemDecoration decoration
                 = new DividerItemDecoration(8, 16);
@@ -89,25 +89,26 @@ public class CurrentTasksFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.main_bottomappbar_menu, menu);
+        inflater.inflate(R.menu.current_bottomappbar_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.remove_all_tasks:
+            case R.id.remove_all_current_tasks:
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
                         .setTitle(getResources().getString(R.string.removal_question_title))
                         .setMessage(getResources().getString(R.string.removal_question))
                         .setNegativeButton(android.R.string.cancel, null)
                         .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            SqlStore.getInstance(getContext()).deleteAll();
+                            SqlStore.getInstance(getContext()).deleteAllCurrent();
                             updateUI();
                         })
                         .show();
                 return true;
             case R.id.bottom_bar_done:
-
+                Intent intent = new Intent(getActivity(), DoneTasksActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

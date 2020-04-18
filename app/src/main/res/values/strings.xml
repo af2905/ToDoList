@@ -1,25 +1,16 @@
 <resources>
     <string name="app_name">ToDoList</string>
     <string name="add_item">add</string>
-    <string name="removal_question">"All tasks will be deleted permanently."</string>
-    <string name="removal_question_title">"Delete all tasks?"</string>
+    <string name="removal_question">"All current tasks will be deleted permanently."</string>
+    <string name="removal_question_title">"Delete all current tasks?"</string>
     <string name="done">done</string>
     <string name="task">task</string>
-    <string name="description">description</string>
-    <string name="no_description">"description not added"</string>
     <string name="save">save</string>
-    <string name="find_item">find</string>
-    <string name="search_button">search</string>
-    <string name="enter_text_to_search">enter text to search</string>
     <string name="edit_one_item">edit one task</string>
     <string name="delete">delete</string>
     <string name="photo">photo</string>
     <string name="date">date</string>
     <string name="time">time</string>
-    <string name="reminder_off">reminder off</string>
-    <string name="short_text">short text</string>
-    <string name="helper_text">the field must not be empty</string>
-    <string name="notes">notes</string>
     <string name="alarm">alarm</string>
     <string name="choose_date">choose a date</string>
     <string name="enter_task_name">enter task name</string>
@@ -28,8 +19,10 @@
     <string name="separator_later">LATER</string>
     <string name="separator_past">PAST</string>
     <string name="delete_all_tasks">delete all tasks</string>
-    <string name="cancel">cancel</string>
-
+    <string name="delete_all_current_tasks">delete all current tasks</string>
+    <string name="delete_all_done_tasks">delete all done tasks</string>
+    <string name="completed">COMPLETED</string>
+    <string name="subtask">subtask</string>
 
 </resources>
 

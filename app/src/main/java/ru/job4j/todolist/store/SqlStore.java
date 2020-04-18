@@ -59,7 +59,6 @@ public class SqlStore implements IStore {
                 cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DATE)),
                 cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.ALARM)),
                 cursor.getInt(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DONE)));
-
     }
 
     @Override
@@ -133,9 +132,57 @@ public class SqlStore implements IStore {
         db.close();
     }
 
+    public void deleteAllCurrent() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(ToDoDbSchema.ToDoTable.TABLE_NAME,
+                ToDoDbSchema.ToDoTable.Cols.DONE + " =? ", new String[]{Integer.toString(0)});
+        db.close();
+    }
+
+    public void deleteAllDone() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(ToDoDbSchema.ToDoTable.TABLE_NAME,
+                ToDoDbSchema.ToDoTable.Cols.DONE + " =? ", new String[]{Integer.toString(1)});
+        db.close();
+    }
+
     @Override
     public int size() {
         return 0;
+    }
+
+
+    public List<Task> getCurrentItems() {
+        String s = " 0";
+        return getCurrentOrDoneItemsMethod(s);
+    }
+
+    public List<Task> getDoneItems() {
+        String s = " 1";
+        return getCurrentOrDoneItemsMethod(s);
+    }
+
+    private List<Task> getCurrentOrDoneItemsMethod(String number) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        List<Task> tasks = new ArrayList<>();
+        String selectItems = "SELECT * FROM " + ToDoDbSchema.ToDoTable.TABLE_NAME
+                + " WHERE " + ToDoDbSchema.ToDoTable.Cols.DONE
+                + " = " + number;
+        Cursor cursor = db.rawQuery(selectItems, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Task task = new Task(
+                        cursor.getInt(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.ID)),
+                        cursor.getString(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.NAME)),
+                        cursor.getString(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DESC)),
+                        cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DATE)),
+                        cursor.getLong(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.ALARM)),
+                        cursor.getInt(cursor.getColumnIndex(ToDoDbSchema.ToDoTable.Cols.DONE)));
+                tasks.add(task);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return tasks;
     }
 
     private static ContentValues getContentValues(Task task) {

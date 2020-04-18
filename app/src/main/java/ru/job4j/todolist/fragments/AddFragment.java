@@ -78,7 +78,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
             activity.setSupportActionBar(toolbar);
         }
         if (activity != null) {
-           Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+            Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         }
     }
 

@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
-                android:contentDescription="@string/short_text"
+                android:contentDescription="@string/subtask"
                 android:src="@drawable/ic_list_accent_24dp"
                 android:visibility="invisible" />
 

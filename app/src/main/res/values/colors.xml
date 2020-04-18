@@ -6,4 +6,6 @@
     <color name="colorBackground">#F2F2F2</color>
     <color name="colorPrimaryLight">#798FAC</color>
     <color name="colorPinkLight">#FCC7C3</color>
+    <color name="colorSilver">#C0C0C0</color>
+
 </resources>

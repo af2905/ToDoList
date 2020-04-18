@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_cancel_accent_24dp"
-                android:contentDescription="@string/cancel" />
+                android:contentDescription="@android:string/cancel" />
         </LinearLayout>
 
         <LinearLayout

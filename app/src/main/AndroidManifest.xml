@@ -37,6 +37,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".fragments.BaseActivity" />
+        <activity android:name=".fragments.DoneTasksActivity"
+            android:parentActivityName=".fragments.CurrentTasksActivity"/>
 
         <receiver
             android:name=".alarm.AlarmReceiver"
