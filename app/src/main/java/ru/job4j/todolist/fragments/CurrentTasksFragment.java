@@ -98,6 +98,7 @@ public class CurrentTasksFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.remove_all_current_tasks:
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
@@ -111,8 +112,12 @@ public class CurrentTasksFragment extends Fragment
                         .show();
                 return true;
             case R.id.bottom_bar_done:
-                Intent intent = new Intent(getActivity(), DoneTasksActivity.class);
+                intent = new Intent(getActivity(), DoneTasksActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.bottom_bar_sync:
+                intent = new Intent(getActivity(), CurrentTasksActivity.class);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -23,6 +23,7 @@
     <string name="delete_all_done_tasks">delete all done tasks</string>
     <string name="completed">COMPLETED</string>
     <string name="subtask">subtask</string>
+    <string name="sync">sync</string>
 
 </resources>
 
