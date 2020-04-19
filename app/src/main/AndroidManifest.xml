@@ -25,10 +25,17 @@
 
         <activity
             android:name=".fragments.AddActivity"
-            android:parentActivityName=".fragments.CurrentTasksActivity" />
-        <activity android:name=".fragments.EditActivity"
-            android:parentActivityName=".fragments.CurrentTasksActivity"/>
-        <activity android:name=".fragments.CurrentTasksActivity">
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:parentActivityName=".fragments.CurrentTasksActivity"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".fragments.EditActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:parentActivityName=".fragments.CurrentTasksActivity"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".fragments.CurrentTasksActivity"
+            android:screenOrientation="locked">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,8 +44,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".fragments.BaseActivity" />
-        <activity android:name=".fragments.DoneTasksActivity"
-            android:parentActivityName=".fragments.CurrentTasksActivity"/>
+        <activity
+            android:name=".fragments.DoneTasksActivity"
+            android:parentActivityName=".fragments.CurrentTasksActivity"
+            android:screenOrientation="locked" />
 
         <receiver
             android:name=".alarm.AlarmReceiver"

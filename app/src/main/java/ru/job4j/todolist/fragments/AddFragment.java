@@ -1,5 +1,6 @@
 package ru.job4j.todolist.fragments;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,10 +15,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -50,14 +51,14 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.add_new_task, container, false);
         sqlStore = SqlStore.getInstance(getContext());
         addName = view.findViewById(R.id.addName);
         calendarDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         calendarTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         addDate = view.findViewById(R.id.addDate);
-        addDate.setText(Utils.getDate(
-                calendarDate.getTimeInMillis()));
+        addDate.setText(Utils.getDate(calendarDate.getTimeInMillis()));
         addDate.setOnClickListener(this);
         addAlarm = view.findViewById(R.id.addAlarm);
         addAlarm.setVisibility(View.INVISIBLE);
@@ -65,17 +66,17 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         cancel = view.findViewById(R.id.cancel);
         cancel.setVisibility(View.INVISIBLE);
         cancel.setOnClickListener(this);
-        addToolbar(view);
+        addBottomAppBar(view);
         final FloatingActionButton fab = view.findViewById(R.id.fab_save);
         fab.setOnClickListener(this);
         return view;
     }
 
-    private void addToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.bottom_app_bar_add);
+    private void addBottomAppBar(View view) {
+        BottomAppBar bottomAppBar = view.findViewById(R.id.bottom_app_bar_add);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
-            activity.setSupportActionBar(toolbar);
+            activity.setSupportActionBar(bottomAppBar);
         }
         if (activity != null) {
             Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -148,7 +149,7 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(
                         Objects.requireNonNull(getActivity())
                                 .getApplicationContext(), CurrentTasksActivity.class);
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());

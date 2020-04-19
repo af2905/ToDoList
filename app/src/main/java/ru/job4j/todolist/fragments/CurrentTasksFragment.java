@@ -1,5 +1,6 @@
 package ru.job4j.todolist.fragments;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,11 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -38,23 +39,26 @@ public class CurrentTasksFragment extends Fragment
         implements View.OnClickListener, SearchView.OnQueryTextListener {
     private CurrentTaskAdapter adapter;
     private RecyclerView recycler;
+    private FloatingActionButton fab;
+    private BottomAppBar bottomAppBar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.current_tasks_row, container, false);
         AlarmHelper.getInstance().init(Objects.requireNonNull(getContext()).getApplicationContext());
         adapter = new CurrentTaskAdapter(getContext(), getActivity());
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        Toolbar toolbar = view.findViewById(R.id.bottom_app_bar);
+        bottomAppBar = view.findViewById(R.id.bottom_app_bar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
-            activity.setSupportActionBar(toolbar);
+            activity.setSupportActionBar(bottomAppBar);
         }
-        final FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
         SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(this);
@@ -118,8 +122,9 @@ public class CurrentTasksFragment extends Fragment
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getActivity(), AddActivity.class);
-        startActivity(intent);
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
     }
+
 
     @Override
     public boolean onQueryTextSubmit(String query) {

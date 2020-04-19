@@ -52,20 +52,22 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void addSortedTask(Task newTask) {
-        int position = -1;
-        for (int i = 0; i < getItemCount(); i++) {
-            if (getItem(i).isTask()) {
-                Task task = (Task) getItem(i);
-                if (newTask.getDate() < task.getDate()) {
-                    position = i;
-                    break;
+        if (newTask.getDone() != 0) {
+            int position = -1;
+            for (int i = 0; i < getItemCount(); i++) {
+                if (getItem(i).isTask()) {
+                    Task task = (Task) getItem(i);
+                    if (newTask.getDate() < task.getDate()) {
+                        position = i;
+                        break;
+                    }
                 }
             }
-        }
-        if (position != -1) {
-            addItem(position, newTask);
-        } else {
-            addItem(newTask);
+            if (position != -1) {
+                addItem(position, newTask);
+            } else {
+                addItem(newTask);
+            }
         }
     }
 
@@ -116,9 +118,14 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         if (task.getAlarm() != 0) {
             taskViewHolder.alarmIcon.setVisibility(View.VISIBLE);
+            if (task.getAlarm() < Calendar.getInstance().getTimeInMillis()) {
+                taskViewHolder.alarmIcon.setImageDrawable(
+                        resources.getDrawable(
+                                R.drawable.ic_notifications_active_silver_24dp, activity.getTheme()));
+            }
         }
         if (task.getDone() == 1) {
-               Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
             calendar.setTimeInMillis(task.getDate());
             long today = Calendar.getInstance(
                     TimeZone.getTimeZone("UTC")).get(Calendar.DAY_OF_YEAR);
@@ -127,15 +134,20 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 taskViewHolder.undo.setEnabled(false);
                 taskViewHolder.undo.setVisibility(View.INVISIBLE);
             }
+            if (task.getAlarm() != 0) {
+                if (task.getAlarm() < Calendar.getInstance().getTimeInMillis()) {
+                    taskViewHolder.undo.setEnabled(false);
+                    taskViewHolder.undo.setVisibility(View.INVISIBLE);
+                }
+            }
         }
         taskViewHolder.undo.setOnClickListener(v -> {
-            removeItem(taskViewHolder.getLayoutPosition());
-            notifyItemRemoved(position);
             task.setDone(0);
             store.updateItem(task);
             if (task.getAlarm() != 0) {
                 alarmHelper.setExactAlarm(task);
             }
+            removeItem(taskViewHolder.getLayoutPosition());
         });
         taskViewHolder.delete.setOnClickListener(v -> {
             removeItem(taskViewHolder.getLayoutPosition());

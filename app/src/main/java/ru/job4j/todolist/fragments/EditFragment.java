@@ -14,10 +14,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -63,6 +63,8 @@ public class EditFragment extends Fragment implements View.OnClickListener {
             selectedTime = getArguments().getLong("alarm");
             id = getArguments().getInt("id");
         }
+        calendarDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendarTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         editName = view.findViewById(R.id.editName);
         editName.setText(sqlStore.getItem(id).getName());
         editDate = view.findViewById(R.id.editDate);
@@ -81,17 +83,17 @@ public class EditFragment extends Fragment implements View.OnClickListener {
         editAlarm.setOnClickListener(this);
         cancel.setOnClickListener(this);
         adapter = new CurrentTaskAdapter(Objects.requireNonNull(getContext()), getActivity());
-        addToolbar(view);
+        addBottomAppBar(view);
         final FloatingActionButton fab = view.findViewById(R.id.fab_save);
         fab.setOnClickListener(this);
         return view;
     }
 
-    private void addToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.bottom_app_bar_edit);
+    private void addBottomAppBar(View view) {
+        BottomAppBar bottomAppBar = view.findViewById(R.id.bottom_app_bar_edit);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
-            activity.setSupportActionBar(toolbar);
+            activity.setSupportActionBar(bottomAppBar);
         }
         if (activity != null) {
             Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -164,7 +166,6 @@ public class EditFragment extends Fragment implements View.OnClickListener {
                     selectedDate = calendarDate.getTimeInMillis();
                 }
                 if (selectedTime != 0) {
-                    calendarTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     calendarDate.setTimeInMillis(selectedDate);
                     calendarTime.setTimeInMillis(selectedTime);
                     if (calendarDate.get(Calendar.DAY_OF_YEAR) != calendarTime.get(Calendar.DAY_OF_YEAR)) {
@@ -233,7 +234,6 @@ public class EditFragment extends Fragment implements View.OnClickListener {
     private void showCalendarForAlarmSelection() {
         FragmentManager manager = getFragmentManager();
         if (calendarDate == null) {
-            calendarDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
             Date date = new Date(selectedDate);
             calendarDate.setTime(date);
         }

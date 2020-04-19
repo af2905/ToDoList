@@ -14,11 +14,11 @@ import android.view.animation.LayoutAnimationController;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -47,16 +47,16 @@ public class DoneTasksFragment extends Fragment implements View.OnClickListener 
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         final FloatingActionButton fab = view.findViewById(R.id.fab_done);
         fab.setOnClickListener(this);
-        addToolbar(view);
+        addBottomAppBar(view);
         updateUI();
         return view;
     }
 
-    private void addToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.bottom_app_bar_done);
+    private void addBottomAppBar(View view) {
+        BottomAppBar bottomAppBar = view.findViewById(R.id.bottom_app_bar_done);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
-            activity.setSupportActionBar(toolbar);
+            activity.setSupportActionBar(bottomAppBar);
         }
         if (activity != null) {
             Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

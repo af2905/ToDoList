@@ -1,9 +1,11 @@
 package ru.job4j.todolist.adapter;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,7 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context context;
     private final SqlStore sqlStore;
     private Activity activity;
+    private final static String TAG = "log";
 
     public CurrentTaskAdapter(Context context, Activity activity) {
         this.context = context.getApplicationContext();
@@ -110,14 +113,13 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         Task task = (Task) getItem(position - 2);
                         if (task.getDateStatus() == newTask.getDateStatus()) {
                             position -= 1;
-                        }
-                        if (position - 2 < 0) {
+                        } /*else if (position - 2 < 0) {
                             position -= 1;
-                        }
+                        }*/
                     }
-                    if (separator != null) {
-                        addItem(position - 1, separator);
-                    }
+                }
+                if (separator != null) {
+                    addItem(position - 1, separator);
                 }
                 addItem(position, newTask);
             } else {
@@ -221,21 +223,24 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 intent.putExtra("id", task.getId());
                 intent.putExtra("date", task.getDate());
                 intent.putExtra("alarm", task.getAlarm());
-                activity.startActivity(intent);
+                activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
             });
             if (task.getDate() != 0) {
                 taskViewHolder.date.setText(String.valueOf(Utils.getDate(task.getDate())));
             }
             if (task.getAlarm() != 0) {
+                Log.d(TAG, "alarm position: " + position + "LayoutPosition(): " + holder.getLayoutPosition());
                 taskViewHolder.alarmIcon.setVisibility(View.VISIBLE);
                 Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 if (task.getAlarm() < calendar.getTimeInMillis()) {
                     taskViewHolder.alarmIcon.setImageResource(R.drawable.ic_notifications_active_red_24dp);
                 }
             }
+            taskViewHolder.done.setChecked(false);
             taskViewHolder.done.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 AlarmHelper alarmHelper = AlarmHelper.getInstance();
                 if (isChecked) {
+                    Log.d(TAG, "checked position: " + position + "LayoutPosition(): " + holder.getLayoutPosition());
                     task.setDone(1);
                     sqlStore.updateItem(task);
                     alarmHelper.removeAlarm(task.getId());
@@ -247,10 +252,6 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             SeparatorViewHolder separatorViewHolder = (SeparatorViewHolder) holder;
             separatorViewHolder.type.setText(resources.getString(separator.getType()));
             if (separatorViewHolder.type.getText()
-                    .equals(resources.getString(R.string.separator_past))) {
-                separatorViewHolder.type.setTextColor(
-                        resources.getColor(android.R.color.darker_gray, activity.getTheme()));
-            } else if (separatorViewHolder.type.getText()
                     .equals(resources.getString(R.string.separator_today))) {
                 separatorViewHolder.type.setTextColor(
                         resources.getColor(R.color.colorPrimary, activity.getTheme()));

@@ -23,7 +23,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:hint="@string/task"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -33,6 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
+
                     android:textColor="?attr/colorPrimaryDark"
                     tools:layout_editor_absoluteX="83dp"
                     tools:layout_editor_absoluteY="55dp" />
@@ -72,8 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_cancel_accent_24dp"
-                android:contentDescription="@android:string/cancel" />
+                android:contentDescription="@android:string/cancel"
+                android:src="@drawable/ic_cancel_accent_24dp" />
         </LinearLayout>
 
         <LinearLayout
