@@ -24,6 +24,8 @@
     <string name="completed">COMPLETED</string>
     <string name="subtask">subtask</string>
     <string name="sync">sync</string>
+    <string name="add_subtask">add subtask</string>
+    <string name="add_task">add task</string>
 
 </resources>
 

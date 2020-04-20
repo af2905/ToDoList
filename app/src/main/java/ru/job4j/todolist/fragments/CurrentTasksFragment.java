@@ -40,7 +40,6 @@ public class CurrentTasksFragment extends Fragment
     private CurrentTaskAdapter adapter;
     private RecyclerView recycler;
     private FloatingActionButton fab;
-    private BottomAppBar bottomAppBar;
 
     @Nullable
     @Override
@@ -53,7 +52,7 @@ public class CurrentTasksFragment extends Fragment
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        bottomAppBar = view.findViewById(R.id.bottom_app_bar);
+        BottomAppBar bottomAppBar = view.findViewById(R.id.bottom_app_bar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
             activity.setSupportActionBar(bottomAppBar);
@@ -113,7 +112,7 @@ public class CurrentTasksFragment extends Fragment
                 return true;
             case R.id.bottom_bar_done:
                 intent = new Intent(getActivity(), DoneTasksActivity.class);
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 return true;
             case R.id.bottom_bar_sync:
                 intent = new Intent(getActivity(), CurrentTasksActivity.class);

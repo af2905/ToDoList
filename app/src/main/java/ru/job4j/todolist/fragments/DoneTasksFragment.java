@@ -1,5 +1,6 @@
 package ru.job4j.todolist.fragments;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ public class DoneTasksFragment extends Fragment implements View.OnClickListener 
     private DoneTaskAdapter adapter;
     private RecyclerView recycler;
     private SqlStore sqlStore;
+    private FloatingActionButton fab;
 
     @Nullable
     @Override
@@ -45,7 +47,7 @@ public class DoneTasksFragment extends Fragment implements View.OnClickListener 
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        final FloatingActionButton fab = view.findViewById(R.id.fab_done);
+        fab = view.findViewById(R.id.fab_done);
         fab.setOnClickListener(this);
         addBottomAppBar(view);
         updateUI();
@@ -107,6 +109,6 @@ public class DoneTasksFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getActivity(), CurrentTasksActivity.class);
-        startActivity(intent);
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
     }
 }
