@@ -25,12 +25,10 @@
 
         <activity
             android:name=".fragments.AddActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
             android:parentActivityName=".fragments.CurrentTasksActivity"
             android:screenOrientation="locked" />
         <activity
             android:name=".fragments.EditActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
             android:parentActivityName=".fragments.CurrentTasksActivity"
             android:screenOrientation="locked" />
         <activity

@@ -1,5 +1,6 @@
 package ru.job4j.todolist.fragments;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -138,6 +139,7 @@ public class EditFragment extends Fragment implements View.OnClickListener {
                 return true;
             case R.id.bottom_bar_delete:
                 sqlStore.deleteItem(sqlStore.getItem(id));
+                sqlStore.deleteSubtasks(id);
                 currentTaskAdapter.removeItem(position);
                 Intent intent = new Intent(Objects.requireNonNull(getActivity())
                         .getApplicationContext(), CurrentTasksActivity.class);
@@ -218,7 +220,7 @@ public class EditFragment extends Fragment implements View.OnClickListener {
                 }
                 Intent intent = new Intent(Objects.requireNonNull(getActivity())
                         .getApplicationContext(), CurrentTasksActivity.class);
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());

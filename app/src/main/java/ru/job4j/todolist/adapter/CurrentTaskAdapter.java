@@ -191,11 +191,11 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.current_task_design, parent, false);
                 Chip name = view.findViewById(R.id.name);
-                ImageView subTaskIcon = view.findViewById(R.id.sub_task_icon);
+                ImageView subtaskIcon = view.findViewById(R.id.subtask_icon);
                 ImageView alarmIcon = view.findViewById(R.id.alarm_icon);
                 TextView date = view.findViewById(R.id.date_text);
                 MaterialCheckBox done = view.findViewById(R.id.done);
-                return new TaskViewHolder(view, name, subTaskIcon, alarmIcon, date, done);
+                return new TaskViewHolder(view, name, subtaskIcon, alarmIcon, date, done);
             case TYPE_SEPARATOR:
                 View separator = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.separator, parent, false);
@@ -236,6 +236,10 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     taskViewHolder.alarmIcon.setImageResource(R.drawable.ic_notifications_active_red_24dp);
                 }
             }
+            if (task.getDesc().equals("1")) {
+                taskViewHolder.subtaskIcon.setVisibility(View.VISIBLE);
+            }
+
             taskViewHolder.done.setChecked(false);
             taskViewHolder.done.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 AlarmHelper alarmHelper = AlarmHelper.getInstance();
@@ -283,16 +287,16 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private class TaskViewHolder extends RecyclerView.ViewHolder {
         Chip name;
-        ImageView subTaskIcon, alarmIcon;
+        ImageView subtaskIcon, alarmIcon;
         TextView date;
         MaterialCheckBox done;
 
 
-        TaskViewHolder(@NonNull View itemView, Chip name, ImageView subTaskIcon,
+        TaskViewHolder(@NonNull View itemView, Chip name, ImageView subtaskIcon,
                        ImageView alarmIcon, TextView date, MaterialCheckBox done) {
             super(itemView);
             this.name = name;
-            this.subTaskIcon = subTaskIcon;
+            this.subtaskIcon = subtaskIcon;
             this.alarmIcon = alarmIcon;
             this.date = date;
             this.done = done;

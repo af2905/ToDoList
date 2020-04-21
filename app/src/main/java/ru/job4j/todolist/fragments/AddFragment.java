@@ -163,8 +163,13 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                     }
                 }
 
-                Task task = new Task(Objects.requireNonNull(addName.getText()).toString(), "",
-                        selectedDate, selectedTime, 0);
+                String containsSubtasks = "0";
+                if (adapter.getItemCount() != 0) {
+                    containsSubtasks = "1";
+                }
+
+                Task task = new Task(Objects.requireNonNull(addName.getText()).toString(),
+                        containsSubtasks, selectedDate, selectedTime, 0);
                 sqlStore.addItem(task);
 
                 List<Subtask> subtasks = adapter.getSubtasks();

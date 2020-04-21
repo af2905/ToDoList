@@ -13,11 +13,6 @@ public class Subtask {
         this.text = text;
     }
 
-    public Subtask(int taskId, String text) {
-        this.taskId = taskId;
-        this.text = text;
-    }
-
     public Subtask(String text) {
         this.text = text;
     }

@@ -101,7 +101,7 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        final SqlStore store = SqlStore.getInstance(context);
+        final SqlStore sqlStore = SqlStore.getInstance(context);
         final Resources resources = holder.itemView.getResources();
         AlarmHelper alarmHelper = AlarmHelper.getInstance();
         Task task = (Task) items.get(position);
@@ -143,7 +143,7 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         taskViewHolder.undo.setOnClickListener(v -> {
             task.setDone(0);
-            store.updateItem(task);
+            sqlStore.updateItem(task);
             if (task.getAlarm() != 0) {
                 alarmHelper.setExactAlarm(task);
             }
@@ -151,7 +151,8 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         });
         taskViewHolder.delete.setOnClickListener(v -> {
             removeItem(taskViewHolder.getLayoutPosition());
-            store.deleteItem(task);
+            sqlStore.deleteItem(task);
+            sqlStore.deleteSubtasks(task.getId());
         });
     }
 
