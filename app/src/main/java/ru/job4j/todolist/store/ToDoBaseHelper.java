@@ -16,20 +16,29 @@ public class ToDoBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + ToDoDbSchema.ToDoTable.TABLE_NAME + " ("
-                + ToDoDbSchema.ToDoTable.Cols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + ToDoDbSchema.ToDoTable.Cols.NAME + " TEXT, "
-                + ToDoDbSchema.ToDoTable.Cols.DESC + " TEXT, "
-                + ToDoDbSchema.ToDoTable.Cols.DATE + " LONG, "
-                + ToDoDbSchema.ToDoTable.Cols.ALARM + " LONG, "
-                + ToDoDbSchema.ToDoTable.Cols.DONE + " INTEGER"
+        db.execSQL("CREATE TABLE " + ToDoDbSchema.TasksTable.NAME + " ("
+                + ToDoDbSchema.TasksTable.Cols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + ToDoDbSchema.TasksTable.Cols.NAME + " TEXT, "
+                + ToDoDbSchema.TasksTable.Cols.DESC + " TEXT, "
+                + ToDoDbSchema.TasksTable.Cols.DATE + " LONG, "
+                + ToDoDbSchema.TasksTable.Cols.ALARM + " LONG, "
+                + ToDoDbSchema.TasksTable.Cols.DONE + " INTEGER"
                 + ")"
         );
+
+        db.execSQL("CREATE TABLE " + ToDoDbSchema.SubtasksTable.NAME + " ("
+                + ToDoDbSchema.SubtasksTable.Cols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + ToDoDbSchema.SubtasksTable.Cols.TASK_ID + " INTEGER, "
+                + ToDoDbSchema.SubtasksTable.Cols.TEXT + " TEXT"
+                + ")");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE " + ToDoDbSchema.ToDoTable.TABLE_NAME);
+        db.execSQL("DROP TABLE " + ToDoDbSchema.TasksTable.NAME);
+        onCreate(db);
+
+        db.execSQL("DROP TABLE " + ToDoDbSchema.SubtasksTable.NAME);
         onCreate(db);
     }
 }

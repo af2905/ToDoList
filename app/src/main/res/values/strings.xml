@@ -26,6 +26,7 @@
     <string name="sync">sync</string>
     <string name="add_subtask">add subtask</string>
     <string name="add_task">add task</string>
+    <string name="enter_subtask_name">enter subtask name</string>
 
 </resources>
 

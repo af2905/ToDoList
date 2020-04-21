@@ -26,8 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/add_task"
-                    android:textColor="@color/colorPrimary"
-                    />
+                    android:textColor="@color/colorPrimary" />
 
             </LinearLayout>
 
@@ -172,7 +171,7 @@
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_sub_tasks"
+                android:id="@+id/recycler_subtasks"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"

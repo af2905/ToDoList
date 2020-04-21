@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.button.MaterialButton;
@@ -25,21 +27,24 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
 import ru.job4j.todolist.adapter.CurrentTaskAdapter;
+import ru.job4j.todolist.adapter.SubtaskAdapter;
 import ru.job4j.todolist.alarm.AlarmHelper;
+import ru.job4j.todolist.model.Subtask;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
 import static android.app.Activity.RESULT_OK;
 
 public class EditFragment extends Fragment implements View.OnClickListener {
-    private TextInputEditText editName;
-    private MaterialButton editDate, editAlarm;
+    private TextInputEditText editName, addSubtaskTxt;
+    private MaterialButton editDate, editAlarm, addSubtaskBtn;
     private SqlStore sqlStore;
     private long selectedDate, selectedTime;
     private ImageView cancel;
@@ -49,7 +54,9 @@ public class EditFragment extends Fragment implements View.OnClickListener {
     private Calendar calendarTime;
     private int position;
     private int id;
-    private CurrentTaskAdapter adapter;
+    private CurrentTaskAdapter currentTaskAdapter;
+    private SubtaskAdapter adapter;
+    private RecyclerView recycler;
 
     @Nullable
     @Override
@@ -82,10 +89,19 @@ public class EditFragment extends Fragment implements View.OnClickListener {
         }
         editAlarm.setOnClickListener(this);
         cancel.setOnClickListener(this);
-        adapter = new CurrentTaskAdapter(Objects.requireNonNull(getContext()), getActivity());
+        currentTaskAdapter = new CurrentTaskAdapter(Objects.requireNonNull(getContext()), getActivity());
         addBottomAppBar(view);
         final FloatingActionButton fab = view.findViewById(R.id.fab_save);
         fab.setOnClickListener(this);
+        addSubtaskTxt = view.findViewById(R.id.addSubtaskText);
+        addSubtaskBtn = view.findViewById(R.id.addSubtaskButton);
+        addSubtaskBtn.setOnClickListener(this);
+        List<Subtask> subtasks = sqlStore.getSubtasks(id);
+        adapter = new SubtaskAdapter(subtasks);
+        recycler = view.findViewById(R.id.recycler_subtasks);
+        recycler.setHasFixedSize(true);
+        recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recycler.setAdapter(adapter);
         return view;
     }
 
@@ -122,7 +138,7 @@ public class EditFragment extends Fragment implements View.OnClickListener {
                 return true;
             case R.id.bottom_bar_delete:
                 sqlStore.deleteItem(sqlStore.getItem(id));
-                adapter.removeItem(position);
+                currentTaskAdapter.removeItem(position);
                 Intent intent = new Intent(Objects.requireNonNull(getActivity())
                         .getApplicationContext(), CurrentTasksActivity.class);
                 startActivity(intent);
@@ -157,6 +173,14 @@ public class EditFragment extends Fragment implements View.OnClickListener {
                 cancel.setVisibility(View.INVISIBLE);
                 editAlarm.setVisibility(View.INVISIBLE);
                 break;
+            case R.id.addSubtaskButton:
+                if (Objects.requireNonNull(addSubtaskTxt.getText()).length() == 0) {
+                    Toast.makeText(getContext(), R.string.enter_subtask_name, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                adapter.addSubtask(new Subtask(addSubtaskTxt.getText().toString()));
+                addSubtaskTxt.setText(null);
+                break;
             case R.id.fab_save:
                 if (editName.length() == 0) {
                     Toast.makeText(getContext(), R.string.enter_task_name, Toast.LENGTH_SHORT).show();
@@ -181,6 +205,13 @@ public class EditFragment extends Fragment implements View.OnClickListener {
                 task.setAlarm(selectedTime);
                 task.setDone(0);
                 sqlStore.updateItem(task);
+
+                sqlStore.deleteSubtasks(id);
+                List<Subtask> subtasks = adapter.getSubtasks();
+                for (Subtask subtask : subtasks) {
+                    sqlStore.addSubtask(subtask, task.getId());
+                }
+
                 if (selectedTime != 0) {
                     AlarmHelper alarmHelper = AlarmHelper.getInstance();
                     alarmHelper.setExactAlarm(task);

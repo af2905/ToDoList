@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.button.MaterialButton;
@@ -25,20 +27,23 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.Utils;
+import ru.job4j.todolist.adapter.SubtaskAdapter;
 import ru.job4j.todolist.alarm.AlarmHelper;
+import ru.job4j.todolist.model.Subtask;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
 import static android.app.Activity.RESULT_OK;
 
 public class AddFragment extends Fragment implements View.OnClickListener {
-    private TextInputEditText addName;
-    private MaterialButton addDate, addAlarm;
+    private TextInputEditText addName, addSubtaskTxt;
+    private MaterialButton addDate, addAlarm, addSubtaskBtn;
     private ImageView cancel;
     private SqlStore sqlStore;
     private long selectedDate = 0, selectedTime = 0;
@@ -46,6 +51,8 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_TIME = 0;
     private Calendar calendarDate;
     private Calendar calendarTime;
+    private SubtaskAdapter adapter;
+    private RecyclerView recycler;
 
     @Nullable
     @Override
@@ -69,6 +76,14 @@ public class AddFragment extends Fragment implements View.OnClickListener {
         addBottomAppBar(view);
         final FloatingActionButton fab = view.findViewById(R.id.fab_save);
         fab.setOnClickListener(this);
+        addSubtaskTxt = view.findViewById(R.id.addSubtaskText);
+        addSubtaskBtn = view.findViewById(R.id.addSubtaskButton);
+        addSubtaskBtn.setOnClickListener(this);
+        adapter = new SubtaskAdapter();
+        recycler = view.findViewById(R.id.recycler_subtasks);
+        recycler.setHasFixedSize(true);
+        recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recycler.setAdapter(adapter);
         return view;
     }
 
@@ -122,6 +137,14 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                 cancel.setVisibility(View.INVISIBLE);
                 addAlarm.setVisibility(View.INVISIBLE);
                 break;
+            case R.id.addSubtaskButton:
+                if (Objects.requireNonNull(addSubtaskTxt.getText()).length() == 0) {
+                    Toast.makeText(getContext(), R.string.enter_subtask_name, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                adapter.addSubtask(new Subtask(addSubtaskTxt.getText().toString()));
+                addSubtaskTxt.setText(null);
+                break;
             case R.id.fab_save:
                 if (addName.length() == 0) {
                     Toast.makeText(getContext(), R.string.enter_task_name, Toast.LENGTH_SHORT).show();
@@ -139,9 +162,16 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                         selectedTime = calendarTime.getTimeInMillis();
                     }
                 }
+
                 Task task = new Task(Objects.requireNonNull(addName.getText()).toString(), "",
                         selectedDate, selectedTime, 0);
                 sqlStore.addItem(task);
+
+                List<Subtask> subtasks = adapter.getSubtasks();
+                for (Subtask subtask : subtasks) {
+                    sqlStore.addSubtask(subtask, task.getId());
+                }
+
                 if (selectedTime != 0) {
                     AlarmHelper alarmHelper = AlarmHelper.getInstance();
                     alarmHelper.setExactAlarm(task);
