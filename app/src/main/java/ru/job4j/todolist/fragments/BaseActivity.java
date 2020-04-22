@@ -29,11 +29,5 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finishAfterTransition();
-    }
-
     public abstract Fragment loadFrg();
 }

@@ -28,6 +28,8 @@
     <string name="add_task">add task</string>
     <string name="enter_subtask_name">enter subtask name</string>
     <string name="add">add</string>
+    <string name="really_exit">Really exit?</string>
+    <string name="exit_question">After confirmation, the application will be closed.</string>
 
 </resources>
 

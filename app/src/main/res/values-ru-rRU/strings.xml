@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Список дел</string>
+    <string name="add_item">добавить</string>
+    <string name="removal_question">Все текущие задачи будут удалены без возможности восстановления.</string>
+    <string name="removal_question_title">Удалить все текущие задачи?</string>
+    <string name="done">выполнено</string>
+    <string name="task">задача</string>
+    <string name="save">сохранить</string>
+    <string name="edit_one_item">исправить одну задачу</string>
+    <string name="delete">удалить</string>
+    <string name="photo">фотография</string>
+    <string name="date">дата</string>
+    <string name="time">время</string>
+    <string name="alarm">напоминание</string>
+    <string name="choose_date">выберете дату</string>
+    <string name="enter_task_name">введите название задачи</string>
+    <string name="separator_today">СЕГОДНЯ</string>
+    <string name="separator_tomorrow">ЗАВТРА</string>
+    <string name="separator_later">ПОЗЖЕ</string>
+    <string name="separator_past">ПРОШЕДШИЕ</string>
+    <string name="delete_all_tasks">удалить все задачи</string>
+    <string name="delete_all_current_tasks">удалить все текущие задачи</string>
+    <string name="delete_all_done_tasks">удалить все завершенные задачи</string>
+    <string name="completed">ЗАВЕРШЕННЫЕ</string>
+    <string name="subtask">подзадача</string>
+    <string name="sync">синхронизировать</string>
+    <string name="add_subtask">добавить подзадачу</string>
+    <string name="add_task">добавить задачу</string>
+    <string name="enter_subtask_name">введите название подзадачи</string>
+    <string name="add">добавить</string>
+    <string name="really_exit">Действительно выйти?</string>
+    <string name="exit_question">После подтверждения приложение будет закрыто.</string>
+</resources>

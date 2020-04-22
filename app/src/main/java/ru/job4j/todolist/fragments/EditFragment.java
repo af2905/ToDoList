@@ -143,7 +143,7 @@ public class EditFragment extends Fragment implements View.OnClickListener {
                 currentTaskAdapter.removeItem(position);
                 Intent intent = new Intent(Objects.requireNonNull(getActivity())
                         .getApplicationContext(), CurrentTasksActivity.class);
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
