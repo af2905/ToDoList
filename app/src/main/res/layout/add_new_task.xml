@@ -25,7 +25,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/add_task"
+                    android:text="@string/task"
                     android:textColor="@color/colorPrimary" />
 
             </LinearLayout>
@@ -107,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="@string/add_subtask"
+                    android:text="@string/subtask"
                     android:textColor="@color/colorPrimaryLight" />
 
             </LinearLayout>
@@ -157,8 +157,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:text="@string/add"
                     app:icon="@drawable/ic_arrow_downward_primary_24dp"
-                    app:iconGravity="textStart" />
+                    app:iconGravity="textEnd" />
             </LinearLayout>
 
         </LinearLayout>

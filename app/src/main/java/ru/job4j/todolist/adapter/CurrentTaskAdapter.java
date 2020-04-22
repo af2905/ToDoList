@@ -5,7 +5,6 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,20 +32,16 @@ import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
 public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private boolean isContainsSeparatorPast;
     private boolean containsSeparatorToday;
     private boolean containsSeparatorTomorrow;
     private boolean containsSeparatorLater;
     private static final int TYPE_TASK = 0;
     private static final int TYPE_SEPARATOR = 1;
     private List<Item> items = new ArrayList<>();
-    private Context context;
     private final SqlStore sqlStore;
     private Activity activity;
-    private final static String TAG = "log";
 
     public CurrentTaskAdapter(Context context, Activity activity) {
-        this.context = context.getApplicationContext();
         this.activity = activity;
         sqlStore = SqlStore.getInstance(context);
     }
@@ -84,7 +79,6 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         long tomorrow = Calendar.getInstance(
                 TimeZone.getTimeZone("UTC")).get(Calendar.DAY_OF_YEAR) + 1;
         if (calendar.get(Calendar.DAY_OF_YEAR) < today) {
-            newTask.setDateStatus(Separator.TYPE_PAST);
             newTask.setDone(1);
             sqlStore.updateItem(newTask);
         } else if (calendar.get(Calendar.DAY_OF_YEAR) == today) {
@@ -113,9 +107,7 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         Task task = (Task) getItem(position - 2);
                         if (task.getDateStatus() == newTask.getDateStatus()) {
                             position -= 1;
-                        } /*else if (position - 2 < 0) {
-                            position -= 1;
-                        }*/
+                        }
                     }
                 }
                 if (separator != null) {
@@ -154,9 +146,6 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void checkSeparators(int type) {
         switch (type) {
-            case Separator.TYPE_PAST:
-                isContainsSeparatorPast = false;
-                break;
             case Separator.TYPE_TODAY:
                 containsSeparatorToday = false;
                 break;
@@ -175,7 +164,6 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (getItemCount() != 0) {
             items = new ArrayList<>();
             notifyDataSetChanged();
-            isContainsSeparatorPast = false;
             containsSeparatorToday = false;
             containsSeparatorTomorrow = false;
             containsSeparatorLater = false;
@@ -184,8 +172,7 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                      int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_TASK:
                 View view = LayoutInflater.from(parent.getContext())
@@ -207,11 +194,9 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder,
-                                 final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         Item item = getItem(position);
         final Resources resources = holder.itemView.getResources();
-
         if (item.isTask()) {
             holder.itemView.setEnabled(true);
             final Task task = (Task) item;
@@ -223,13 +208,13 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 intent.putExtra("id", task.getId());
                 intent.putExtra("date", task.getDate());
                 intent.putExtra("alarm", task.getAlarm());
-                activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+                activity.startActivity(
+                        intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
             });
             if (task.getDate() != 0) {
                 taskViewHolder.date.setText(String.valueOf(Utils.getDate(task.getDate())));
             }
             if (task.getAlarm() != 0) {
-                Log.d(TAG, "alarm position: " + position + "LayoutPosition(): " + holder.getLayoutPosition());
                 taskViewHolder.alarmIcon.setVisibility(View.VISIBLE);
                 Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 if (task.getAlarm() < calendar.getTimeInMillis()) {
@@ -239,12 +224,10 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (task.getDesc().equals("1")) {
                 taskViewHolder.subtaskIcon.setVisibility(View.VISIBLE);
             }
-
             taskViewHolder.done.setChecked(false);
             taskViewHolder.done.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 AlarmHelper alarmHelper = AlarmHelper.getInstance();
                 if (isChecked) {
-                    Log.d(TAG, "checked position: " + position + "LayoutPosition(): " + holder.getLayoutPosition());
                     task.setDone(1);
                     sqlStore.updateItem(task);
                     alarmHelper.removeAlarm(task.getId());
@@ -285,12 +268,11 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private class TaskViewHolder extends RecyclerView.ViewHolder {
+    private static class TaskViewHolder extends RecyclerView.ViewHolder {
         Chip name;
         ImageView subtaskIcon, alarmIcon;
         TextView date;
         MaterialCheckBox done;
-
 
         TaskViewHolder(@NonNull View itemView, Chip name, ImageView subtaskIcon,
                        ImageView alarmIcon, TextView date, MaterialCheckBox done) {
@@ -303,7 +285,7 @@ public class CurrentTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private class SeparatorViewHolder extends RecyclerView.ViewHolder {
+    private static class SeparatorViewHolder extends RecyclerView.ViewHolder {
         TextView type;
 
         SeparatorViewHolder(@NonNull View itemView, TextView type) {

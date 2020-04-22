@@ -21,14 +21,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         transition.setDuration(1500);
         getWindow().setEnterTransition(transition);
         getWindow().setExitTransition(transition);
-
         setContentView(R.layout.host_frg);
         FragmentManager fm = getSupportFragmentManager();
         if (fm.findFragmentById(R.id.content) == null) {
             fm.beginTransaction().add(R.id.content, loadFrg())
                     .commit();
         }
-}
+    }
 
     @Override
     public void onBackPressed() {

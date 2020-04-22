@@ -45,7 +45,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class EditFragment extends Fragment implements View.OnClickListener {
     private TextInputEditText editName, addSubtaskTxt;
-    private MaterialButton editDate, editAlarm, addSubtaskBtn;
+    private MaterialButton editDate;
+    private MaterialButton editAlarm;
     private SqlStore sqlStore;
     private long selectedDate, selectedTime;
     private ImageView cancel;
@@ -57,7 +58,6 @@ public class EditFragment extends Fragment implements View.OnClickListener {
     private int id;
     private CurrentTaskAdapter currentTaskAdapter;
     private SubtaskAdapter adapter;
-    private RecyclerView recycler;
 
     @Nullable
     @Override
@@ -95,11 +95,11 @@ public class EditFragment extends Fragment implements View.OnClickListener {
         final FloatingActionButton fab = view.findViewById(R.id.fab_save);
         fab.setOnClickListener(this);
         addSubtaskTxt = view.findViewById(R.id.addSubtaskText);
-        addSubtaskBtn = view.findViewById(R.id.addSubtaskButton);
+        MaterialButton addSubtaskBtn = view.findViewById(R.id.addSubtaskButton);
         addSubtaskBtn.setOnClickListener(this);
         List<Subtask> subtasks = sqlStore.getSubtasks(id);
         adapter = new SubtaskAdapter(subtasks);
-        recycler = view.findViewById(R.id.recycler_subtasks);
+        RecyclerView recycler = view.findViewById(R.id.recycler_subtasks);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycler.setAdapter(adapter);
@@ -200,20 +200,22 @@ public class EditFragment extends Fragment implements View.OnClickListener {
                         selectedTime = calendarTime.getTimeInMillis();
                     }
                 }
+                String containsSubtasks = "0";
+                if (adapter.getItemCount() != 0) {
+                    containsSubtasks = "1";
+                }
                 Task task = sqlStore.getItem(id);
                 task.setName(Objects.requireNonNull(editName.getText()).toString());
-                task.setDesc("");
+                task.setDesc(containsSubtasks);
                 task.setDate(selectedDate);
                 task.setAlarm(selectedTime);
                 task.setDone(0);
                 sqlStore.updateItem(task);
-
                 sqlStore.deleteSubtasks(id);
                 List<Subtask> subtasks = adapter.getSubtasks();
                 for (Subtask subtask : subtasks) {
                     sqlStore.addSubtask(subtask, task.getId());
                 }
-
                 if (selectedTime != 0) {
                     AlarmHelper alarmHelper = AlarmHelper.getInstance();
                     alarmHelper.setExactAlarm(task);

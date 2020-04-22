@@ -106,7 +106,6 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         AlarmHelper alarmHelper = AlarmHelper.getInstance();
         Task task = (Task) items.get(position);
         final DoneTaskAdapter.TaskViewHolder taskViewHolder = (DoneTaskAdapter.TaskViewHolder) holder;
-
         taskViewHolder.name.setText(task.getName());
         taskViewHolder.name.setEnabled(false);
         taskViewHolder.name.setTextColor(
@@ -129,7 +128,6 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             calendar.setTimeInMillis(task.getDate());
             long today = Calendar.getInstance(
                     TimeZone.getTimeZone("UTC")).get(Calendar.DAY_OF_YEAR);
-
             if (calendar.get(Calendar.DAY_OF_YEAR) < today) {
                 taskViewHolder.undo.setEnabled(false);
                 taskViewHolder.undo.setVisibility(View.INVISIBLE);
@@ -161,7 +159,7 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return items.size();
     }
 
-    private class TaskViewHolder extends RecyclerView.ViewHolder {
+    private static class TaskViewHolder extends RecyclerView.ViewHolder {
         Chip name;
         ImageView subTaskIcon, alarmIcon, delete;
         TextView date;

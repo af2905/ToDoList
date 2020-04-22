@@ -25,7 +25,6 @@ public class ToDoBaseHelper extends SQLiteOpenHelper {
                 + ToDoDbSchema.TasksTable.Cols.DONE + " INTEGER"
                 + ")"
         );
-
         db.execSQL("CREATE TABLE " + ToDoDbSchema.SubtasksTable.NAME + " ("
                 + ToDoDbSchema.SubtasksTable.Cols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ToDoDbSchema.SubtasksTable.Cols.TASK_ID + " INTEGER, "
@@ -37,7 +36,6 @@ public class ToDoBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE " + ToDoDbSchema.TasksTable.NAME);
         onCreate(db);
-
         db.execSQL("DROP TABLE " + ToDoDbSchema.SubtasksTable.NAME);
         onCreate(db);
     }

@@ -39,16 +39,16 @@ public class CurrentTasksFragment extends Fragment
         implements View.OnClickListener, SearchView.OnQueryTextListener {
     private CurrentTaskAdapter adapter;
     private RecyclerView recycler;
-    private FloatingActionButton fab;
+    private SqlStore sqlStore;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.current_tasks_row, container, false);
         AlarmHelper.getInstance().init(Objects.requireNonNull(getContext()).getApplicationContext());
         adapter = new CurrentTaskAdapter(getContext(), getActivity());
+        sqlStore = SqlStore.getInstance(getContext());
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -57,7 +57,7 @@ public class CurrentTasksFragment extends Fragment
         if (activity != null) {
             activity.setSupportActionBar(bottomAppBar);
         }
-        fab = view.findViewById(R.id.fab);
+        FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
         SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(this);
@@ -66,7 +66,7 @@ public class CurrentTasksFragment extends Fragment
     }
 
     private void updateUI() {
-        List<Task> tasks = SqlStore.getInstance(getContext()).getCurrentItems();
+        List<Task> tasks = sqlStore.getCurrentItems();
         addTasksFromDB(tasks);
         RecyclerView.ItemDecoration decoration
                 = new DividerItemDecoration(8, 16);
@@ -98,6 +98,7 @@ public class CurrentTasksFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
+        AlarmHelper alarmHelper = AlarmHelper.getInstance();
         switch (item.getItemId()) {
             case R.id.remove_all_current_tasks:
                 new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
@@ -105,7 +106,12 @@ public class CurrentTasksFragment extends Fragment
                         .setMessage(getResources().getString(R.string.removal_question))
                         .setNegativeButton(android.R.string.cancel, null)
                         .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            SqlStore.getInstance(getContext()).deleteAllCurrent();
+                            List<Task> currentTasks = sqlStore.getCurrentItems();
+                            for (Task task : currentTasks) {
+                                sqlStore.deleteSubtasks(task.getId());
+                                alarmHelper.removeAlarm(task.getId());
+                            }
+                            sqlStore.deleteAllCurrent();
                             updateUI();
                         })
                         .show();
@@ -129,7 +135,6 @@ public class CurrentTasksFragment extends Fragment
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
     }
 
-
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -137,8 +142,7 @@ public class CurrentTasksFragment extends Fragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        List<Task> tasks = SqlStore.getInstance(getContext())
-                .getSelectedItems(newText);
+        List<Task> tasks = sqlStore.getSelectedItems(newText);
         adapter = new CurrentTaskAdapter(Objects.requireNonNull(getContext()), getActivity());
         addTasksFromDB(tasks);
         recycler.setAdapter(adapter);

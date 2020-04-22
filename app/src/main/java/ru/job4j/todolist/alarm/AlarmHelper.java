@@ -31,10 +31,8 @@ public class AlarmHelper {
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra("_id", task.getId());
         intent.putExtra("name", task.getName());
-
         pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(),
                 task.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
     }
 
     public void setExactAlarm(Task task) {
@@ -48,13 +46,10 @@ public class AlarmHelper {
                 AlarmManager.RTC_WAKEUP, task.getAlarm(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
-
     public void removeAlarm(int id) {
         Intent intent = new Intent(context, AlarmReceiver.class);
-
         PendingIntent pendingIntent = PendingIntent
                 .getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         alarmManager.cancel(pendingIntent);
     }
 }

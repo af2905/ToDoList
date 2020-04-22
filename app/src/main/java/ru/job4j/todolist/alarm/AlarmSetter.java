@@ -13,11 +13,9 @@ public class AlarmSetter extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SqlStore sqlStore = SqlStore.getInstance(context);
-
         AlarmHelper.getInstance().init(context);
         AlarmHelper alarmHelper = AlarmHelper.getInstance();
         List<Task> tasks = sqlStore.getAllItems();
-
         for (Task task : tasks) {
             if (task.getAlarm() != 0) {
                 alarmHelper.setExactAlarm(task);

@@ -28,6 +28,7 @@ import java.util.Objects;
 import ru.job4j.todolist.DividerItemDecoration;
 import ru.job4j.todolist.R;
 import ru.job4j.todolist.adapter.DoneTaskAdapter;
+import ru.job4j.todolist.alarm.AlarmHelper;
 import ru.job4j.todolist.model.Task;
 import ru.job4j.todolist.store.SqlStore;
 
@@ -35,7 +36,6 @@ public class DoneTasksFragment extends Fragment implements View.OnClickListener 
     private DoneTaskAdapter adapter;
     private RecyclerView recycler;
     private SqlStore sqlStore;
-    private FloatingActionButton fab;
 
     @Nullable
     @Override
@@ -47,7 +47,7 @@ public class DoneTasksFragment extends Fragment implements View.OnClickListener 
         recycler = view.findViewById(R.id.recycler);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        fab = view.findViewById(R.id.fab_done);
+        FloatingActionButton fab = view.findViewById(R.id.fab_done);
         fab.setOnClickListener(this);
         addBottomAppBar(view);
         updateUI();
@@ -78,7 +78,13 @@ public class DoneTasksFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        AlarmHelper alarmHelper = AlarmHelper.getInstance();
         if (item.getItemId() == R.id.remove_all_done_tasks) {
+            List<Task> doneTasks = sqlStore.getDoneItems();
+            for (Task task : doneTasks) {
+                sqlStore.deleteSubtasks(task.getId());
+                alarmHelper.removeAlarm(task.getId());
+            }
             sqlStore.deleteAllDone();
             updateUI();
             return true;
@@ -104,7 +110,6 @@ public class DoneTasksFragment extends Fragment implements View.OnClickListener 
             adapter.addSortedTask(tasks.get(i));
         }
     }
-
 
     @Override
     public void onClick(View v) {

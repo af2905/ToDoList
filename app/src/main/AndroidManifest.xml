@@ -19,10 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <provider
-            android:name=".store.StoreContentProvider"
-            android:authorities="ru.job4j.todolist" />
-
         <activity
             android:name=".fragments.AddActivity"
             android:parentActivityName=".fragments.CurrentTasksActivity"

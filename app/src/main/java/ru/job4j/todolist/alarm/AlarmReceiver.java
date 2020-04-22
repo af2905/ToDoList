@@ -22,13 +22,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int id = intent.getIntExtra("_id", 0);
         String name = intent.getStringExtra("name");
-
         Intent resultIntent = new Intent(context, CurrentTasksActivity.class);
-
         if (MyApplication.isActivityVisible()) {
             resultIntent = intent;
         }
-
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent
                 .getActivity(context, id, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -36,7 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(name)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setSmallIcon(R.drawable.ic_alarm_accent_24dp)
+                .setSmallIcon(R.drawable.ic_notifications_active_red_24dp)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setCategory(Notification.CATEGORY_STATUS)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -45,7 +42,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "ToDoList",
                     NotificationManager.IMPORTANCE_HIGH);

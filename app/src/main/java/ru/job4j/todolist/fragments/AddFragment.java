@@ -58,7 +58,6 @@ public class AddFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.add_new_task, container, false);
         sqlStore = SqlStore.getInstance(getContext());
         addName = view.findViewById(R.id.addName);
@@ -162,12 +161,10 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                         selectedTime = calendarTime.getTimeInMillis();
                     }
                 }
-
                 String containsSubtasks = "0";
                 if (adapter.getItemCount() != 0) {
                     containsSubtasks = "1";
                 }
-
                 Task task = new Task(Objects.requireNonNull(addName.getText()).toString(),
                         containsSubtasks, selectedDate, selectedTime, 0);
                 sqlStore.addItem(task);
@@ -176,7 +173,6 @@ public class AddFragment extends Fragment implements View.OnClickListener {
                 for (Subtask subtask : subtasks) {
                     sqlStore.addSubtask(subtask, task.getId());
                 }
-
                 if (selectedTime != 0) {
                     AlarmHelper alarmHelper = AlarmHelper.getInstance();
                     alarmHelper.setExactAlarm(task);

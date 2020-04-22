@@ -64,7 +64,7 @@ public class SubtaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return subtasks.size();
     }
 
-    private class SubtaskViewHolder extends RecyclerView.ViewHolder {
+    private static class SubtaskViewHolder extends RecyclerView.ViewHolder {
         TextView text;
         ImageView cancel;
 
