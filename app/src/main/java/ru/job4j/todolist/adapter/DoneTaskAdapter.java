@@ -105,6 +105,7 @@ public class DoneTaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final Resources resources = holder.itemView.getResources();
         AlarmHelper alarmHelper = AlarmHelper.getInstance();
         Task task = (Task) items.get(position);
+        alarmHelper.removeAlarm(task.getId());
         final DoneTaskAdapter.TaskViewHolder taskViewHolder = (DoneTaskAdapter.TaskViewHolder) holder;
         taskViewHolder.name.setText(task.getName());
         taskViewHolder.name.setEnabled(false);
